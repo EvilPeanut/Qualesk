@@ -1,0 +1,9 @@
+RewriteEngine On
+RewriteBase "/"
+
+RewriteCond %{THE_REQUEST} ^.*/index\.php
+RewriteRule ^(.*)index.php$ /$1 [R=301,L]
+RewriteRule ^(includes|server|static)($|/) - [L]
+
+RewriteCond "%{REQUEST_URI}" "!=/index.php"
+RewriteRule "^(.*)" "/index.php?url=$1" [L,PT]

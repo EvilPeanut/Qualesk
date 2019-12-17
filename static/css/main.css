@@ -1,0 +1,46 @@
+body {
+	margin: 0;
+	background-color: #5cbad6; /* was slategrey; */
+}
+p, h1 {
+	margin: 0;
+	font-family: sans-serif;
+}
+h1 {
+	margin-bottom: 16px;
+	font-weight: normal;
+	font-size: 20px;
+}
+a, .inline-button p {
+	cursor: pointer;
+	text-decoration: none;
+	color: #4783ef;
+}
+.grid-container {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	grid-gap: 10px;
+	padding: 1vw;
+}
+.grid-item {
+	border-radius: 16px;
+	background-color: #fff;
+}
+.grid-item > div {
+	padding: 16px;
+}
+.grid-item-3x1 {
+	grid-column-start: 1;
+	grid-column-end: 4;
+}
+.grid-item-2x1 {
+	grid-column-start: 1;
+	grid-column-end: 3;
+}
+.inline-button {
+	display: inline-block;
+	background-color: #efefef;
+	border-bottom: 1px solid lightgrey;
+	padding: 8px 16px;
+	cursor: pointer;
+}
