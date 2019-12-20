@@ -1,6 +1,10 @@
 # Qualesk
 A real-time sensor array and hardware management and visualization system with a web-based front-end
 
+## Copyright and Usage
+All code and resources, excluding Node.js modules, are copyright Reece Aaron Lecrivain 2019.
+You are free to use and modify the project without warranty in both commercial and non-commercial environments as long as credit is given.
+
 ## Fundamental Capabilities
 * Real-time visualisation of remote sensor data
 * Mass storage of remote sensor data
