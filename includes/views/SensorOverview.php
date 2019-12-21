@@ -272,33 +272,14 @@ $lower_urgent_boundary = $sensor[ 'lower_urgent_boundary' ];
 			</div>
 		</div></div>
 
-		<div class="grid-item"><div>
-			<h1>Import Sensor Reading</h1>
-			<form action="../includes/services/sensorReadingImport.php" method="post" enctype="multipart/form-data">
-				<input type="file" name="CSVfile" id="CSVfile">
-				<br><br>
-				<p>Sensor Name</p><input type="text" name="sensor_name" value="<? echo $sensor['name']; ?>"><br><br>
-				<input type="submit" value="Import Sensor Readings">
-			</form>
-			<br>
-			<h1>Add Sensor Reading</h1>
-			<form action="../includes/services/sensorReadingCreate.php" method="post">
-				<p>Date</p><input type="text" name="date"><br><br>
-				<p>Data</p><input type="text" name="data"><br><br>
-				<input type="submit" value="Create Sensor Reading">
-			</form>
-		</div></div>
+		<?
+		
+		if ( AccountManager::has_permission( 'admin_features' ) ) {
+			include 'elements/panels/sensorAddReadings.php';
+			include 'elements/panels/sensorSetBoundaries.php';
+		}
 
-		<div class="grid-item"><div>
-			<h1>Sensor Reading Boundaries</h1>
-			<form action="../includes/services/sensorBoundariesSet.php" method="post">
-				<p>Upper Urgent Boundary</p><input type="text" name="upper_urgent_boundary" value="<? echo $upper_urgent_boundary; ?>"><br><br>
-				<p>Upper Warning Boundary</p><input type="text" name="upper_warning_boundary" value="<? echo $upper_warning_boundary; ?>"><br><br>
-				<p>Lower Warning Boundary</p><input type="text" name="lower_warning_boundary" value="<? echo $lower_warning_boundary; ?>"><br><br>
-				<p>Lower Urgent Boundary</p><input type="text" name="lower_urgent_boundary" value="<? echo $lower_urgent_boundary; ?>"><br><br>
-				<input type="submit" value="Set Boundaries">
-			</form>
-		</div></div>
+		?>
 	</div>
 </body>
 </html>
