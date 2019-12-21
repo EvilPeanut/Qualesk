@@ -51,7 +51,7 @@ class Admin extends Controller {
 	public static function PrintRecentLogins() {
 		require( 'services/DatabaseConnect.php' );
 
-		if ( $statement = $mysqli->prepare( "SELECT username, date FROM logins JOIN users ON logins.user_id=users.user_id;" ) ) {
+		if ( $statement = $mysqli->prepare( "SELECT username, date FROM logins JOIN users ON logins.user_id=users.user_id ORDER BY date DESC;" ) ) {
 			$statement->execute();
 			$statement->store_result();
 			$statement->bind_result( $username, $date );
