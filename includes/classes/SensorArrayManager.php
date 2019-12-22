@@ -144,7 +144,7 @@ class SensorArrayManager
 			$statement->bind_result( $uuid, $name, $description, $system_uuid );
 			
 			while ( $statement->fetch() ) {
-				if ( $system_uuid != $previous_system_uuid ) {
+				if ( $allow_management && $system_uuid != $previous_system_uuid ) {
 					$system = SystemManager::get_system( $system_uuid );
 
 					if ( $previous_system_uuid != NULL ) {

@@ -246,7 +246,7 @@ class SensorManager
 			$statement->bind_result( $uuid, $name, $description, $sensor_array_uuid );
 			
 			while ( $statement->fetch() ) {
-				if ( $sensor_array_uuid != $previous_sensor_array_uuid ) {
+				if ( $allow_management && $sensor_array_uuid != $previous_sensor_array_uuid ) {
 					$sensor_array = SensorArrayManager::get_sensor_array( $sensor_array_uuid );
 
 					if ( $previous_sensor_array_uuid != NULL ) {
