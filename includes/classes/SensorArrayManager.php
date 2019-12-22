@@ -84,6 +84,28 @@ class SensorArrayManager
 		}
 	}
 
+	public static function get_sensor_array( $sensor_array_uuid ) {
+		require( 'services/DatabaseConnect.php' );
+
+		if ( $statement = $mysqli->prepare( "SELECT uuid, system_uuid, name, description, longitude, latitude FROM sensor_arrays WHERE uuid=?;" ) ) {
+			$statement->bind_param( 's', $sensor_array_uuid );
+			$statement->execute();
+			$statement->store_result();
+			$statement->bind_result( $uuid, $system_uuid, $name, $description, $longitude, $latitude );
+			
+			$statement->fetch();
+
+			$sensor_array = array();
+			$sensor_array[ 'system_uuid' ] = $system_uuid;
+			$sensor_array[ 'name' ] = $name;
+			$sensor_array[ 'description' ] = $description;
+			$sensor_array[ 'longitude' ] = $longitude;
+			$sensor_array[ 'latitude' ] = $latitude;
+
+			return $sensor_array;
+		}
+	}
+
 	public static function get_count( $system_uuid = NULL ) {
 		require( 'services/DatabaseConnect.php' );
 
@@ -113,12 +135,27 @@ class SensorArrayManager
 			$where_clause = " WHERE system_uuid='$system_uuid'";
 		}
 
-		if ( $statement = $mysqli->prepare( "SELECT uuid, name, description FROM sensor_arrays $where_clause;" ) ) {
+		$previous_system_uuid = NULL;
+		$system = NULL;
+
+		if ( $statement = $mysqli->prepare( "SELECT uuid, name, description, system_uuid FROM sensor_arrays $where_clause ORDER BY system_uuid;" ) ) {
 			$statement->execute();
 			$statement->store_result();
-			$statement->bind_result( $uuid, $name, $description );
+			$statement->bind_result( $uuid, $name, $description, $system_uuid );
 			
 			while ( $statement->fetch() ) {
+				if ( $system_uuid != $previous_system_uuid ) {
+					$system = SystemManager::get_system( $system_uuid );
+
+					if ( $previous_system_uuid != NULL ) {
+						echo "<br>";
+					}
+					
+					echo "<p>" . $system[ 'name' ] . "</p>";
+
+					$previous_system_uuid = $system_uuid;
+				}
+
 				if ( $allow_management ) {
 					echo "<img src='../static/img/remove.png' style='cursor: pointer' onclick='show_prompt(\"Remove sensor array\", \"Are you sure you want to remove this sensor array?<br><br>Sensors under this sensor array will also be removed\", \"../includes/services/sensorArrayRemove.php?uuid=$uuid\")'><a href='../array/$uuid'><p style='display: inline'> $name <span style='color: grey'> - $description</span></p></a><br>";
 				} else {

@@ -237,12 +237,27 @@ class SensorManager
 			$where_clause = " WHERE sensor_array_uuid='$sensor_array_uuid'";
 		}
 
-		if ( $statement = $mysqli->prepare( "SELECT uuid, name, description FROM sensors $where_clause;" ) ) {
+		$previous_sensor_array_uuid = NULL;
+		$sensor_array = NULL;
+
+		if ( $statement = $mysqli->prepare( "SELECT uuid, name, description, sensor_array_uuid FROM sensors $where_clause ORDER BY sensor_array_uuid;" ) ) {
 			$statement->execute();
 			$statement->store_result();
-			$statement->bind_result( $uuid, $name, $description );
+			$statement->bind_result( $uuid, $name, $description, $sensor_array_uuid );
 			
 			while ( $statement->fetch() ) {
+				if ( $sensor_array_uuid != $previous_sensor_array_uuid ) {
+					$sensor_array = SensorArrayManager::get_sensor_array( $sensor_array_uuid );
+
+					if ( $previous_sensor_array_uuid != NULL ) {
+						echo "<br>";
+					}
+
+					echo "<p>" . $sensor_array[ 'name' ] . "</p>";
+
+					$previous_sensor_array_uuid = $sensor_array_uuid;
+				}
+
 				if ( $allow_management ) {
 					echo "<img src='../static/img/remove.png' style='cursor: pointer' onclick='show_prompt(\"Remove sensor\", \"Are you sure you want to remove this sensor?\", \"../includes/services/sensorRemove.php?uuid=$uuid\")'><a href='../sensor/$uuid'><p style='display: inline'> $name <span style='color: grey'> - $description</span></p></a><br>";
 				} else {
