@@ -2,23 +2,9 @@
 
 parse_str( substr( $_SERVER[ 'REQUEST_URI' ], strpos( $_SERVER[ 'REQUEST_URI' ], "?" ) + 1 ), $query );
 
-$filter_date_min = array_key_exists( 'min-date', $query ) ? $query[ 'min-date' ] : NULL;
-$filter_date_max = array_key_exists( 'max-date', $query ) ? $query[ 'max-date' ] : NULL;
-
-if ( $filter_date_max == 'Now' ) {
-	$filter_date_max = date( 'Y-m-d\TH:i:s', time() );
-}
-
 $sensor_uuid = substr( $_GET[ 'url' ], strrpos( $_GET[ 'url' ], '/' ) + 1 );
-$sensor_readings_raw = SensorManager::get_sensor_readings( $sensor_uuid );
-$sensor_readings = SensorManager::get_sensor_readings( $sensor_uuid, $filter_date_min, $filter_date_max ); 
+$sensor_readings = SensorManager::get_sensor_readings( $sensor_uuid );
 $sensor = SensorManager::get_sensor( $sensor_uuid ); 
-
-$reading_date_min = str_replace( ' ', 'T', array_values( $sensor_readings_raw )[ 0 ][ 'date' ] ?? '' );
-$reading_date_max = str_replace( ' ', 'T', array_values( $sensor_readings_raw )[ count( $sensor_readings_raw ) - 1 ][ 'date' ] ?? '' );
-
-$filter_date_min = $filter_date_min == NULL ? $reading_date_min : $filter_date_min;
-$filter_date_max = $filter_date_max == NULL ? $reading_date_max : $filter_date_max;
 
 $upper_urgent_boundary = $sensor[ 'upper_urgent_boundary' ];
 $upper_warning_boundary = $sensor[ 'upper_warning_boundary' ];
@@ -33,74 +19,15 @@ $lower_urgent_boundary = $sensor[ 'lower_urgent_boundary' ];
 	<link rel="stylesheet" type="text/css" href="../static/css/main.css">
 	<link rel="icon" type="image/x-icon" href="../static/img/favicon.png" />
 	<script src="../static/js/jquery-3.4.0.min.js"></script>
-	<script>
-	var server_address = '<? echo Config::get( 'wsserver_host' ); ?>';
-	var connection;
-
-	function connect() {
-		// Store and open the server websocket connection
-		connection = new WebSocket( server_address );
-
-		// When the connection is opened
-		connection.onopen = () => {
-			connection.send( JSON.stringify( {
-				type: 'user_definition',
-				data: {
-					core_auth_key: '<? echo Config::get( 'wsserver_auth_key' ); ?>',
-					user_uuid: '<? echo AccountManager::get_user_uuid() ?>',
-					current_view: 'sensor',
-					current_view_uuid: '<? echo $sensor_uuid; ?>'
-				}
-			} ) );
-		};
-
-		// Attempt reconnection every second
-		connection.onclose = () => {
-			setTimeout( () => {
-				connect();
-			}, 1000);
-		};
-
-		// When data is received
-		connection.onmessage = ( message ) => {
-		    var json = JSON.parse( message.data );
-
-		    if ( !chartAPILoaded ) {
-		    	//TODO: Store value for when API is ready
-		    	return;
-		    }
-
-			if ( json.type === 'sensor_reading' ) {
-				var style = 'point { size: 2; }';
-
-				if ( json.data > upper_urgent_boundary || json.data < lower_urgent_boundary ) {
-					style = 'point { fill-color: #FF553F; }';
-				} else if ( json.data > upper_warning_boundary || json.data < lower_warning_boundary ) {
-					style = 'point { fill-color: #FFEB3F; }';
-				}
-
-				reading_count++;
-				reading_total += json.data;
-				moving_average = reading_total / reading_count;
-
-				if ( !init ) {
-					data = google.visualization.arrayToDataTable([
-						[ 'Timestamp', '<? echo $sensor[ 'unit' ]; ?>', { 'type': 'string', 'role': 'style' }, '<? echo $sensor[ 'unit' ]; ?> Moving Average' ],
-						[ new Date( Date.parse( json.date ) ), json.data, style, moving_average ]
-					]);
-
-					drawChart( true );
-				} else {
-					data.addRow( [ new Date( Date.parse( json.date ) ), json.data, style, moving_average ] );
-
-					chart.draw( data, options );
-				}
-			}
+	<script src="https://www.amcharts.com/lib/4/core.js"></script>
+	<script src="https://www.amcharts.com/lib/4/charts.js"></script>
+	<script src="https://www.amcharts.com/lib/4/themes/animated.js"></script>
+	<style>
+		#chartdiv {
+		  width: 100%;
+		  height: 420px;
 		}
-	}
-
-	connect();
-	</script>
+	</style>
 </head>
 <body>
 	<div class="grid-container">
@@ -110,161 +37,183 @@ $lower_urgent_boundary = $sensor[ 'lower_urgent_boundary' ];
 			<h1><? echo $sensor['name']; ?> Graph</h1>
 
 			<script>
-				var upper_urgent_boundary = <? echo $upper_urgent_boundary != NULL ? $upper_urgent_boundary : 'Number.MAX_SAFE_INTEGER' ?>;
-				var upper_warning_boundary = <? echo $upper_warning_boundary != NULL ? $upper_warning_boundary : 'Number.MAX_SAFE_INTEGER' ?>;
-				var lower_warning_boundary = <? echo $lower_warning_boundary != NULL ? $lower_warning_boundary : '-Number.MAX_SAFE_INTEGER' ?>;
-				var lower_urgent_boundary = <? echo $lower_urgent_boundary != NULL ? $lower_urgent_boundary : '-Number.MAX_SAFE_INTEGER' ?>;
-			</script>
-			<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
-			<script type="text/javascript">
-				google.charts.load( 'current', { 'packages': [ 'corechart' ] } );
-				google.charts.setOnLoadCallback( googleChartsLoaded );
+				/*
+					Data from PHP
+				*/
+				var upper_urgent_boundary = <? echo $upper_urgent_boundary != NULL ? $upper_urgent_boundary : 'null' ?>;
+				var upper_warning_boundary = <? echo $upper_warning_boundary != NULL ? $upper_warning_boundary : 'null' ?>;
+				var lower_warning_boundary = <? echo $lower_warning_boundary != NULL ? $lower_warning_boundary : 'null' ?>;
+				var lower_urgent_boundary = <? echo $lower_urgent_boundary != NULL ? $lower_urgent_boundary : 'null' ?>;
+				var unit = "<? echo $sensor[ 'unit' ] != NULL ? $sensor[ 'unit' ] : '' ?>";
 
-				var data, container, chart, init = false, chartAPILoaded = false;
-				var reading_total = 0, reading_count = 0;
+				/*
+					Charts
+				*/
+				am4core.ready(function() {
 
-				var options = {
-					curveType: 'function',
-					legend: { position: 'top', alignment: 'center' },
-					pointsVisible: true,
-					tooltip: { isHtml: true },
-					trendlines: { 0: {
-						lineWidth: 4,
-						color: 'Grey',
-						opacity: 0.2,
-						pointsVisible: false,
-						visibleInLegend: true,
-						labelInLegend: 'Trend',
-						tooltip: false
-					} },
-					series: {
-						1: {
-							lineWidth: 2,
-							color: '#ADD8E6',
-							pointsVisible: false
-						}
-					},
-					chartArea: {
-						width: '90%',
-						height: '75%'
-					}
-				};
+				am4core.useTheme(am4themes_animated);
 
-				function googleChartsLoaded() {
-					chartAPILoaded = true;
-					drawChart();
-				}
+				var chart = am4core.create("chartdiv", am4charts.XYChart);
+				window.chart = chart;
 
-				<?
-
-				$reading_count = 0;
-				$reading_total = 0;
-
-				?>
-
-				function drawChart() {
-					if ( !data ) {
-						data = google.visualization.arrayToDataTable([
-							[ 'Timestamp', '<? echo $sensor[ 'unit' ]; ?>', { 'type': 'string', 'role': 'style' }, '<? echo $sensor[ 'unit' ]; ?> Moving Average' ],
-
-							<?
-
-							foreach ( $sensor_readings as $uuid => $sensor_reading ) {
-								$style = "'point { size: 2; }'";
-
-								if ( ( $upper_urgent_boundary != NULL && $sensor_reading[ 'data' ] > $upper_urgent_boundary ) || ( $lower_urgent_boundary != NULL && $sensor_reading[ 'data' ] < $lower_urgent_boundary ) ) {
-									$style = "'point { fill-color: #FF553F; }'";
-								} else if ( ( $upper_warning_boundary != NULL && $sensor_reading[ 'data' ] > $upper_warning_boundary ) || ( $lower_warning_boundary != NULL && $sensor_reading[ 'data' ] < $lower_warning_boundary ) ) {
-									$style = "'point { fill-color: #FFEB3F; }'";
-								}
-
-								$reading_count++;
-								$reading_total += $sensor_reading[ 'data' ];
-								$moving_average = $reading_total / $reading_count;
-
-								echo "[ new Date( Date.parse( '" . $sensor_reading[ 'date' ] . "' ) ), " . $sensor_reading[ 'data' ] . ", $style, " . $moving_average . " ],";
-							}
-
-							?>
-
-						]);
-
-						<?
-
-						echo "reading_count = $reading_count;";
-						echo "reading_total = $reading_total;";
-
-						?>
-
-					}
-
-					if ( data.getNumberOfRows() != 0 ) {
-						init = true;
-					}
-
-					container = document.getElementById( 'sensor_chart' );
-					chart = new google.visualization.LineChart( container );
-
-					google.visualization.events.addListener( chart, 'ready', () => {
-						var layout = chart.getChartLayoutInterface();
-						if ( $( "#sensor_chart_icons" ).length ) $( "#sensor_chart_icons" ).remove();
-						$( "<div id='sensor_chart_icons'></div>" ).appendTo( "#sensor_chart" );
-						var icon_container = document.getElementById( 'sensor_chart_icons' );
-
-						for ( var i = 0; i < data.getNumberOfRows(); i++ ) {
-							if ( data.getValue( i, 1 ) > upper_urgent_boundary || data.getValue( i, 1 ) < lower_urgent_boundary || data.getValue( i, 1 ) > upper_warning_boundary || data.getValue( i, 1 ) < lower_warning_boundary ) {
-								var xPos = layout.getXLocation( data.getValue( i, 0 ) );
-								var yPos = layout.getYLocation( data.getValue( i, 1 ) );
-
-								var warningImg = icon_container.appendChild( document.createElement( 'img' ) );
-								if ( data.getValue( i, 1 ) > upper_urgent_boundary || data.getValue( i, 1 ) < lower_urgent_boundary ) {
-									warningImg.src = '../static/img/urgent.png';
-								} else {
-									warningImg.src = '../static/img/warning.png';
-								}
-								
-								warningImg.style.position = 'absolute';
-								warningImg.style.top = ( yPos + 164 ) + 'px';
-								warningImg.style.left = ( xPos + 24 ) + 'px';
-							}
-						}
-					});
-
-					if ( init ) {
-						chart.draw( data, options );
-					}
-				}
-			</script>
-
-			<div id="sensor_chart" style="width: 100%; height: 320px"></div>
-
-			<center style="letter-spacing: 1px; padding-top: 4px">
-				<p style="display: inline">From </p><input type="datetime-local" id="min-date" value="<? echo $filter_date_min ?>" min="<? echo $reading_date_min ?>" max="<? echo $reading_date_max ?>" style="border: 0; font-family: sans-serif; font-size: 16px; text-align: center">
-				<p style="display: inline">To </p><input type="datetime-local" id="max-date" value="<? echo $filter_date_max ?>" min="<? echo $reading_date_min ?>" max="<? echo $reading_date_max ?>" style="border: 0; font-family: sans-serif; font-size: 16px; text-align: center">
-				<input type="checkbox" value="max-date-now" id="checkbox-max-date-now" <? echo !array_key_exists( 'max-date', $query ) || $query[ 'max-date' ] == 'Now' ? 'checked' : '' ?> ><p style="display: inline">Now </p>
-				<button id="button_date_filter" style="height: 24px">Filter</button>
-				<script>
-					$( "#max-date" ).prop( "disabled", $( "#checkbox-max-date-now" ).prop( "checked" ) );
-
-					$( "#checkbox-max-date-now" ).change( () => {
-						$( "#max-date" ).prop( "disabled", $( "#checkbox-max-date-now" ).prop( "checked" ) );
-					} );
-
-					$( "#button_date_filter" ).click( () => {
-						var max_date = $( "#checkbox-max-date-now" ).prop( "checked" ) ? 'Now' : $( "#max-date" ).val();
-
-						window.location.href = window.location.origin + window.location.pathname + "?min-date=" + $( "#min-date" ).val() + "&max-date=" + max_date;
-					} );
-				</script>
-			</center>
-		</div></div>
-
-		<div class="grid-item"><div>
-			<h1><? echo $sensor[ 'name' ]; ?> Readings <span style="color: grey; font-size: small"><? echo count( $sensor_readings ); ?> total</span></h1>
-			<div style="height: 320px; overflow-y: auto">
+				// Add data
+				chart.data = [
 				<?
 
 				foreach ( $sensor_readings as $uuid => $sensor_reading ) {
+					echo "{ date: new Date( Date.parse( '" . $sensor_reading[ 'date' ] . "' ) ), value: " . $sensor_reading[ 'data' ] . "},";
+				}
+
+				?>
+				];
+
+				// Set input format for the dates
+				chart.dateFormatter.inputDateFormat = "yyyy-MM-dd";
+
+				// Create axes
+				var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
+				dateAxis.renderer.grid.template.location = 0;
+				dateAxis.minZoomCount = 5;
+				dateAxis.groupData = true;
+				dateAxis.groupCount = 500;
+
+				var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+
+				// Create series
+				var series = chart.series.push(new am4charts.LineSeries());
+				series.dataFields.valueY = "value";
+				series.dataFields.dateX = "date";
+				series.tooltipText = "{value} <? echo $sensor[ 'unit' ]; ?>"
+				series.strokeWidth = 2;
+				series.minBulletDistance = 15;
+
+				// Drop-shaped tooltips
+				series.tooltip.background.cornerRadius = 20;
+				series.tooltip.background.strokeOpacity = 0;
+				series.tooltip.pointerOrientation = "vertical";
+				series.tooltip.label.minWidth = 40;
+				series.tooltip.label.minHeight = 40;
+				series.tooltip.label.textAlign = "middle";
+				series.tooltip.label.textValign = "middle";
+
+				// Make bullets grow on hover
+				var bullet = series.bullets.push(new am4charts.CircleBullet());
+				bullet.circle.strokeWidth = 2;
+				bullet.circle.radius = 1.25;
+				bullet.circle.fill = am4core.color("#fff");
+
+				var bullethover = bullet.states.create("hover");
+				bullethover.properties.scale = 2;
+
+				// Make a panning cursor
+				chart.cursor = new am4charts.XYCursor();
+				chart.cursor.behavior = "panXY";
+				chart.cursor.xAxis = dateAxis;
+				chart.cursor.snapToSeries = series;
+
+				// Create vertical scrollbar and place it before the value axis
+				chart.scrollbarY = new am4core.Scrollbar();
+				chart.scrollbarY.parent = chart.leftAxesContainer;
+				chart.scrollbarY.toBack();
+
+				// Create a horizontal scrollbar with previe and place it underneath the date axis
+				chart.scrollbarX = new am4charts.XYChartScrollbar();
+				chart.scrollbarX.series.push(series);
+				chart.scrollbarX.parent = chart.bottomAxesContainer;
+
+				dateAxis.start = 0.79;
+				dateAxis.keepSelection = true;
+
+				// Create a range to change stroke for values below 0
+				if ( upper_urgent_boundary ) {
+					var upper_urgent_boundary_range = valueAxis.createSeriesRange(series);
+					upper_urgent_boundary_range.value = upper_urgent_boundary;
+					upper_urgent_boundary_range.endValue = Number.MAX_VALUE;
+					upper_urgent_boundary_range.contents.stroke = chart.colors.getIndex(9);
+					upper_urgent_boundary_range.contents.strokeOpacity = 0.7;
+				}
+
+				if ( upper_warning_boundary ) {
+					var upper_warning_boundary_range = valueAxis.createSeriesRange(series);
+					upper_warning_boundary_range.value = upper_warning_boundary;
+					upper_warning_boundary_range.endValue = upper_urgent_boundary ? upper_urgent_boundary : Number.MAX_VALUE;
+					upper_warning_boundary_range.contents.stroke = chart.colors.getIndex(11);
+					upper_warning_boundary_range.contents.strokeOpacity = 0.7;
+				}
+
+				if ( lower_warning_boundary ) {
+					var lower_warning_boundary_range = valueAxis.createSeriesRange(series);
+					lower_warning_boundary_range.value = lower_warning_boundary;
+					lower_warning_boundary_range.endValue = lower_urgent_boundary ? lower_urgent_boundary : -Number.MIN_VALUE;
+					lower_warning_boundary_range.contents.stroke = chart.colors.getIndex(11);
+					lower_warning_boundary_range.contents.strokeOpacity = 0.7;
+				}
+
+				if ( lower_urgent_boundary ) {
+					var lower_urgent_boundary_range = valueAxis.createSeriesRange(series);
+					lower_urgent_boundary_range.value = lower_urgent_boundary;
+					lower_urgent_boundary_range.endValue = -Number.MIN_VALUE;
+					lower_urgent_boundary_range.contents.stroke = chart.colors.getIndex(9);
+					lower_urgent_boundary_range.contents.strokeOpacity = 0.7;
+				}
+
+				});
+
+				/*
+					WebSockets
+				*/
+				var server_address = '<? echo Config::get( 'wsserver_host' ); ?>';
+				var connection;
+
+				function connect() {
+					// Store and open the server websocket connection
+					connection = new WebSocket( server_address );
+
+					// When the connection is opened
+					connection.onopen = () => {
+						connection.send( JSON.stringify( {
+							type: 'user_definition',
+							data: {
+								core_auth_key: '<? echo Config::get( 'wsserver_auth_key' ); ?>',
+								user_uuid: '<? echo AccountManager::get_user_uuid() ?>',
+								current_view: 'sensor',
+								current_view_uuid: '<? echo $sensor_uuid; ?>'
+							}
+						} ) );
+					};
+
+					// Attempt reconnection every second
+					connection.onclose = () => {
+						setTimeout( () => {
+							connect();
+						}, 1000);
+					};
+
+					// When data is received
+					connection.onmessage = ( message ) => {
+					    var json = JSON.parse( message.data );
+
+						if ( json.type === 'sensor_reading' ) {
+							window.chart.addData( [ { date: new Date( Date.parse( json.date ) ), value: json.data } ] );
+
+							$( "#sensor_readings" ).prepend( "<p>" + json.date + " = " + json.data + " " + unit + "</p>" );
+							$( "#reading_total" ).text( $( "#sensor_readings > p" ).length + " total" );
+						}
+					}
+				}
+
+				connect();
+			</script>
+
+			<div id="chartdiv"></div>
+		</div></div>
+
+		<div class="grid-item"><div>
+			<h1><? echo $sensor[ 'name' ]; ?> Readings <span id="reading_total" style="color: grey; font-size: small"><? echo count( $sensor_readings ); ?> total</span></h1>
+			<div id="sensor_readings" style="height: 320px; overflow-y: auto">
+				<?
+
+				foreach ( array_reverse( $sensor_readings ) as $uuid => $sensor_reading ) {
 					echo "<p>" . $sensor_reading[ 'date' ] . " = " . $sensor_reading[ 'data' ] . " " . $sensor_reading[ 'unit' ] . "</p>";
 				}
 

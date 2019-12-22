@@ -2,7 +2,7 @@ body {
 	margin: 0;
 	background-color: #5cbad6; /* was slategrey; */
 }
-p, h1 {
+p, h1, tspan {
 	margin: 0;
 	font-family: sans-serif;
 }

@@ -105,6 +105,26 @@ class SystemManager
 		return $system_center;
 	}
 
+	public static function get_system( $system_uuid ) {
+		require( 'services/DatabaseConnect.php' );
+
+		if ( $statement = $mysqli->prepare( "SELECT name, description FROM systems WHERE uuid=?;" ) ) {
+			$statement->bind_param( 's', $system_uuid );
+			$statement->execute();
+			$statement->store_result();
+			$statement->bind_result( $name, $description );
+			
+			$statement->fetch();
+
+			$system = array();
+			$system[ 'uuid' ] = $system_uuid;
+			$system[ 'name' ] = $name;
+			$system[ 'description' ] = $description;
+
+			return $system;
+		}
+	}
+
 	public static function get_count() {
 		require( 'services/DatabaseConnect.php' );
 

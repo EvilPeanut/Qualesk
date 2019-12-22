@@ -11,7 +11,7 @@ var sensor_array_definition = {
 
 	sensor_array: {
 		// TODO: Automatic sensor_array uuid assignment
-		uuid: 'a1ca1cd5-fa07-48d1-9558-beb6ef90073d',
+		uuid: 'a1ca1cd5-fa07-48d1-9558-beb6ef90071d',
 		name: 'Sutton Harbor',
 		description: 'An emulated array of wave sensors at Sutton Harbor',
 		system_uuid: '39a1c676-2d6f-4fe9-8c99-b071c71d4293',
@@ -21,25 +21,25 @@ var sensor_array_definition = {
 
 	//TODO: Some UUID magic? get_uuid('temperature_sensor')?
 	sensors: {
-		'aec6ee61-685a-4414-bcc6-93ab43d60b32': {
+		'aec6ee61-685a-4414-bcc6-93ab43d60c32': {
 			name: 'Sine Wave Sensor',
 			description: 'A fake sensor which outputs a continuous sine wave',
 			type: {
 				uuid: '617e8c3f-eefb-4ef9-b3fa-a608ec883db3',
 				name: 'Wave',
 				description: 'Wave sensor type using the double data type',
-				unit: '',
+				unit: 'Sin',
 				data_type: 'DOUBLE'
 			}
 		},
-		'aec6ee61-685a-4414-bcc6-93ab43d60b31': {
+		'aec6ee61-685a-4414-bcc6-93ab43d60c31': {
 			name: 'Cosine Wave Sensor',
 			description: 'A fake sensor which outputs a continuous cosine wave',
 			type: {
 				uuid: '617e8c3f-eefb-4ef9-b3fa-a608ec883db3',
 			}
 		},
-		'aec6ee61-685a-4414-bcc6-93ab43d60b30': {
+		'aec6ee61-685a-4414-bcc6-93ab43d60c30': {
 			name: 'Tangent Wave Sensor',
 			description: 'A fake sensor which outputs a continuous tangent wave',
 			type: {
@@ -75,29 +75,30 @@ client.on( 'connectFailed', () => {
 } );
 
 setInterval( () => {
+	console.log("Sending", Math.sin( Date.now() ));
 	if ( connection && connection.connected ) {
 		connection.sendUTF( JSON.stringify( {
 			type: 'sensor_reading',
-			sensor_uuid: 'aec6ee61-685a-4414-bcc6-93ab43d60b32',
+			sensor_uuid: 'aec6ee61-685a-4414-bcc6-93ab43d60c32',
 			date: new Date(),
 			data: Math.sin( Date.now() )
 		} ) );
 
 		connection.sendUTF( JSON.stringify( {
 			type: 'sensor_reading',
-			sensor_uuid: 'aec6ee61-685a-4414-bcc6-93ab43d60b31',
+			sensor_uuid: 'aec6ee61-685a-4414-bcc6-93ab43d60c31',
 			date: new Date(),
 			data: Math.cos( Date.now() )
 		} ) );
 
 		connection.sendUTF( JSON.stringify( {
 			type: 'sensor_reading',
-			sensor_uuid: 'aec6ee61-685a-4414-bcc6-93ab43d60b30',
+			sensor_uuid: 'aec6ee61-685a-4414-bcc6-93ab43d60c30',
 			date: new Date(),
 			data: Math.tan( Date.now() )
 		} ) );
 	}
-}, 500);
+}, 1000);
 
 //
 // Return time in human format ([hh:mm:ss])
