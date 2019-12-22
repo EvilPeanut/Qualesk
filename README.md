@@ -3,7 +3,7 @@ A real-time sensor array and hardware management and visualization system with a
 
 ## Copyright and Usage
 All code, resources and developed technologies, excluding Node.js modules, are copyright Reece Aaron Lecrivain 2019.
-You are free to use and modify the project without warranty in both commercial and non-commercial environments as long as credit is given.
+You are free to use and modify the project without warranty in both commercial and non-commercial environments as long as credit is given. The project may not be sold for profit even after modification but may be present in a paid product as long as the product is not built from the project.
 
 ## Fundamental Capabilities
 * Real-time visualisation of remote sensor data
