@@ -149,9 +149,17 @@ class SystemManager
 			
 			while ( $statement->fetch() ) {
 				if ( $allow_management ) {
-					echo "<img src='../static/img/remove.png' style='cursor: pointer' onclick='show_prompt(\"Remove system\", \"Are you sure you want to remove this system?<br><br>Sensor arrays and sensors under this system will also be removed\", \"../includes/services/systemRemove.php?uuid=$uuid\")'><a href='../system/$uuid'><p style='display: inline'> $name <span style='color: grey'> - $description</span></p></a><br>";
+					if ( strlen( $description ) > 0 ) {
+						echo "<img src='../static/img/remove.png' style='cursor: pointer' onclick='show_prompt(\"Remove system\", \"Are you sure you want to remove this system?<br><br>Sensor arrays and sensors under this system will also be removed\", \"../includes/services/systemRemove.php?uuid=$uuid\")'><a href='../system/$uuid'><p style='display: inline'> $name <span style='color: grey'> - $description</span></p></a><br>";
+					} else {
+						echo "<img src='../static/img/remove.png' style='cursor: pointer' onclick='show_prompt(\"Remove system\", \"Are you sure you want to remove this system?<br><br>Sensor arrays and sensors under this system will also be removed\", \"../includes/services/systemRemove.php?uuid=$uuid\")'><a href='../system/$uuid'><p style='display: inline'> $name</p></a><br>";
+					}
 				} else {
-					echo "<a href='../system/$uuid'><p>$name <span style='color: grey'> - $description</span></p></a><br>";
+					if ( strlen( $description ) > 0 ) {
+						echo "<a href='../system/$uuid'><p>$name <span style='color: grey'> - $description</span></p></a><br>";
+					} else {
+						echo "<a href='../system/$uuid'><p>$name</p></a><br>";
+					}
 
 					if ( $array_statement = $mysqli->prepare( "SELECT uuid, name, description FROM sensor_arrays WHERE system_uuid=?;" ) ) {
 						$array_statement->bind_param( 's', $uuid );
@@ -160,7 +168,11 @@ class SystemManager
 						$array_statement->bind_result( $sensor_array_uuid, $sensor_array_name, $sensor_array_description );
 						
 						while ( $array_statement->fetch() ) {
-							echo "<p style='margin-left: 16px'>&#8627; <a href='../array/$sensor_array_uuid'>$sensor_array_name <span style='color: grey'> - $sensor_array_description</span></p></a><br>";
+							if ( strlen( $sensor_array_description ) > 0 ) {
+								echo "<p style='margin-left: 16px'>&#8627; <a href='../array/$sensor_array_uuid'>$sensor_array_name <span style='color: grey'> - $sensor_array_description</span></p></a><br>";
+							} else {
+								echo "<p style='margin-left: 16px'>&#8627; <a href='../array/$sensor_array_uuid'>$sensor_array_name</p></a><br>";
+							}
 						}
 					}
 				}

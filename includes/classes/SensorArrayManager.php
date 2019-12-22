@@ -157,9 +157,17 @@ class SensorArrayManager
 				}
 
 				if ( $allow_management ) {
-					echo "<img src='../static/img/remove.png' style='cursor: pointer' onclick='show_prompt(\"Remove sensor array\", \"Are you sure you want to remove this sensor array?<br><br>Sensors under this sensor array will also be removed\", \"../includes/services/sensorArrayRemove.php?uuid=$uuid\")'><a href='../array/$uuid'><p style='display: inline'> $name <span style='color: grey'> - $description</span></p></a><br>";
+					if ( strlen( $description ) > 0 ) {
+						echo "<img src='../static/img/remove.png' style='cursor: pointer' onclick='show_prompt(\"Remove sensor array\", \"Are you sure you want to remove this sensor array?<br><br>Sensors under this sensor array will also be removed\", \"../includes/services/sensorArrayRemove.php?uuid=$uuid\")'><a href='../array/$uuid'><p style='display: inline'> $name <span style='color: grey'> - $description</span></p></a><br>";
+					} else {
+						echo "<img src='../static/img/remove.png' style='cursor: pointer' onclick='show_prompt(\"Remove sensor array\", \"Are you sure you want to remove this sensor array?<br><br>Sensors under this sensor array will also be removed\", \"../includes/services/sensorArrayRemove.php?uuid=$uuid\")'><a href='../array/$uuid'><p style='display: inline'> $name</p></a><br>";
+					}
 				} else {
-					echo "<a href='../array/$uuid'><p>$name <span style='color: grey'> - $description</span></p></a><br>";
+					if ( strlen( $description ) > 0 ) {
+						echo "<a href='../array/$uuid'><p>$name <span style='color: grey'> - $description</span></p></a><br>";
+					} else {
+						echo "<a href='../array/$uuid'><p>$name</p></a><br>";
+					}
 				}
 			}
 		}

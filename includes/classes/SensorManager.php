@@ -259,9 +259,17 @@ class SensorManager
 				}
 
 				if ( $allow_management ) {
-					echo "<img src='../static/img/remove.png' style='cursor: pointer' onclick='show_prompt(\"Remove sensor\", \"Are you sure you want to remove this sensor?\", \"../includes/services/sensorRemove.php?uuid=$uuid\")'><a href='../sensor/$uuid'><p style='display: inline'> $name <span style='color: grey'> - $description</span></p></a><br>";
+					if ( strlen( $description ) > 0 ) {
+						echo "<img src='../static/img/remove.png' style='cursor: pointer' onclick='show_prompt(\"Remove sensor\", \"Are you sure you want to remove this sensor?\", \"../includes/services/sensorRemove.php?uuid=$uuid\")'><a href='../sensor/$uuid'><p style='display: inline'> $name <span style='color: grey'> - $description</span></p></a><br>";
+					} else {
+						echo "<img src='../static/img/remove.png' style='cursor: pointer' onclick='show_prompt(\"Remove sensor\", \"Are you sure you want to remove this sensor?\", \"../includes/services/sensorRemove.php?uuid=$uuid\")'><a href='../sensor/$uuid'><p style='display: inline'> $name</p></a><br>";
+					}
 				} else {
-					echo "<a href='../sensor/$uuid'><p>$name <span style='color: grey'> - $description</span></p></a><br>";
+					if ( strlen( $description ) > 0 ) {
+						echo "<a href='../sensor/$uuid'><p>$name <span style='color: grey'> - $description</span></p></a><br>";
+					} else {
+						echo "<a href='../sensor/$uuid'><p>$name</p></a><br>";
+					}
 				}
 			}
 		}
