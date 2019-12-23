@@ -51,6 +51,10 @@ Route::set( '/(sensor\/.*)/' , function() {
 	Generic::CreateView( 'SensorOverview' );
 });
 
+Route::set( '/(graph\/.*)/' , function() {
+	Generic::CreateView( 'SensorGraph' );
+});
+
 Route::set( '/^noperm$/' , function() {
 	Generic::CreateView( 'NoPermissionNotice' );
 });

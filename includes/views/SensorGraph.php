@@ -1,10 +1,19 @@
 <?
 
+	// Polyfill for PHP < 7.3.0
+	if (!function_exists('array_key_first')) {
+		function array_key_first(array $arr) {
+			foreach($arr as $key => $unused) {
+				return $key;
+			}
+			return NULL;
+		}
+	}
+
 	require_once( "classes/sensorManager.php" );
 	require_once( "classes/accountManager.php" );
 
-	parse_str( substr( $_SERVER[ 'REQUEST_URI' ], strpos( $_SERVER[ 'REQUEST_URI' ], "?" ) + 1 ), $sensor_uuid );
-	$sensor_uuid = array_key_first($sensor_uuid);
+	$sensor_uuid = substr( $_GET[ 'url' ], strrpos( $_GET[ 'url' ], '/' ) + 1 );
 
 	$sensor_readings = SensorManager::get_sensor_readings( $sensor_uuid );
 	$sensor = SensorManager::get_sensor( $sensor_uuid ); 
