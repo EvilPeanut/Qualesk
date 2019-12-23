@@ -68,6 +68,43 @@
 
 			var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
 
+			// Break date axis
+			var previousDate;
+			var totalDateDifference = 0;
+
+			for( var dataIndex in chart.data ) {
+				data = chart.data[dataIndex];
+
+				if ( dataIndex == 0 ) {
+					previousDate = data.date;
+					continue;
+				}
+
+				totalDateDifference += data.date - previousDate;
+
+				previousDate = data.date;
+			}
+
+			var breakThreshold = ( totalDateDifference / chart.data.length ) * 2;
+
+			for( var dataIndex in chart.data ) {
+				data = chart.data[dataIndex];
+
+				if ( dataIndex == 0 ) {
+					previousDate = data.date;
+					continue;
+				}
+
+				if ( data.date - previousDate > breakThreshold ) {
+					let dateAxisBreak = dateAxis.axisBreaks.create();
+					dateAxisBreak.startDate = previousDate;
+					dateAxisBreak.endDate = data.date;
+					dateAxisBreak.breakSize = 0;
+				}
+
+				previousDate = data.date;
+			}
+
 			// Create series
 			var series = chart.series.push(new am4charts.LineSeries());
 			series.dataFields.valueY = "value";
