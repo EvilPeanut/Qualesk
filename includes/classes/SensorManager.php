@@ -155,10 +155,10 @@ class SensorManager
 			$filter = "AND date BETWEEN '$filter_date_min' AND '$filter_date_max'";
 		}
 
-		if ( $statement = $mysqli->prepare( "SELECT uuid, CONCAT(date), data FROM `sensor_$sensor_type_uuid` WHERE sensor_uuid='$sensor_uuid' $filter ORDER BY date;" ) ) {
+		if ( $statement = $mysqli->prepare( "SELECT uuid, CONCAT(date), data, anomaly FROM `sensor_$sensor_type_uuid` WHERE sensor_uuid='$sensor_uuid' $filter ORDER BY date;" ) ) {
 			$statement->execute();
 			$statement->store_result();
-			$statement->bind_result( $uuid, $date, $data );
+			$statement->bind_result( $uuid, $date, $data, $anomaly );
 
 			$sensor_readings = array();
 			
@@ -166,6 +166,7 @@ class SensorManager
 				$sensor_readings[ $uuid ] = array();
 				$sensor_readings[ $uuid ][ 'date' ] = $date;
 				$sensor_readings[ $uuid ][ 'data' ] = $data;
+				$sensor_readings[ $uuid ][ 'anomaly' ] = $anomaly;
 				$sensor_readings[ $uuid ][ 'name' ] = $sensor_type[ 'name' ];
 				$sensor_readings[ $uuid ][ 'unit' ] = $sensor_type[ 'unit' ];
 				$sensor_readings[ $uuid ][ 'sensor_type_uuid' ] = $sensor_type_uuid;
@@ -295,6 +296,7 @@ class SensorManager
 			`sensor_uuid` char(36) NOT NULL,
 			`date` datetime(3) NOT NULL,
 			`data` $data_type NOT NULL,
+			`anomaly` boolean NOT NULL DEFAULT 0,
 			PRIMARY KEY (`uuid`)
 			) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 		")->execute();

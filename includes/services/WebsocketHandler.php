@@ -34,7 +34,7 @@
 		    var json = JSON.parse( message.data );
 
 			if ( json.type === 'sensor_reading' ) {
-				$( document ).trigger( "sensor_reading", [ json.date, json.data ] );
+				$( document ).trigger( "sensor_reading", [ json.date, json.data, json.reading_uuid ] );
 			}
 		}
 	}

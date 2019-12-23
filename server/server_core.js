@@ -135,17 +135,17 @@ function accept_connections() {
 							if ( result[ 0 ][ 'COUNT(*)' ] == 0 ) {
 								client_connection.close();
 							} else {
+								json.reading_uuid = core.uuidv4();
+
 								core.broadcast_event( 'onSensorReading', json, client_connection );
 
 								console.log( core.getTime(), 'Received reading from', client_connection.definition.sensor_array.name, 'array of', json.data );
 
-								var reading_uuid = core.uuidv4();
-
-								core.mysql_connection.query( "INSERT INTO " + core.config.mysql.database + ".`sensor_" + client_connection.definition.sensors[ json.sensor_uuid ].type.uuid + "` (uuid, sensor_uuid, date, data) VALUES ('" + reading_uuid + "', '" + json.sensor_uuid + "', '" + core.formatDateString( json.date ) + "', '" + json.data + "')", ( err ) => {
+								core.mysql_connection.query( "INSERT INTO " + core.config.mysql.database + ".`sensor_" + client_connection.definition.sensors[ json.sensor_uuid ].type.uuid + "` (uuid, sensor_uuid, date, data) VALUES ('" + json.reading_uuid + "', '" + json.sensor_uuid + "', '" + core.formatDateString( json.date ) + "', '" + json.data + "')", ( err ) => {
 									if ( err ) throw err;
 								});
 
-								broadcast_sensor_reading( json.sensor_uuid, core.formatDateString( json.date ), json.data );
+								broadcast_sensor_reading( json.sensor_uuid, json.reading_uuid, core.formatDateString( json.date ), json.data );
 							}
 						});
 					}
@@ -160,13 +160,14 @@ function accept_connections() {
 	});
 }
 
-function broadcast_sensor_reading( sensor_uuid, date, data ) {
+function broadcast_sensor_reading( sensor_uuid, reading_uuid, date, data ) {
 	for ( var user_uuid in core.user_connections ) {
 		var user = core.user_connections[ user_uuid ];
 
 		if ( user.definition.current_view === 'sensor' && user.definition.current_view_uuid === sensor_uuid ) {
 			user.connection.sendUTF( JSON.stringify( {
 				type: 'sensor_reading',
+				reading_uuid: reading_uuid,
 				date: date,
 				data: data
 			} ) );

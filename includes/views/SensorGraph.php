@@ -13,6 +13,8 @@
 	$lower_warning_boundary = $sensor[ 'lower_warning_boundary' ];
 	$lower_urgent_boundary = $sensor[ 'lower_urgent_boundary' ];
 
+	$is_logged_in = AccountManager::is_logged_in();
+
 ?>
 <!DOCTYPE html>
 <html style="height: 100%">
@@ -53,7 +55,7 @@
 			<?
 
 			foreach ( $sensor_readings as $uuid => $sensor_reading ) {
-				echo "{ date: new Date( Date.parse( '" . $sensor_reading[ 'date' ] . "' ) ), value: " . $sensor_reading[ 'data' ] . "},";
+				echo "{ date: new Date( Date.parse( '" . $sensor_reading[ 'date' ] . "' ) ), value: " . $sensor_reading[ 'data' ] . ", uuid: '" . $uuid . "', anomaly: " . $sensor_reading[ 'anomaly' ] . "},";
 			}
 
 			?>
@@ -68,50 +70,114 @@
 
 			var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
 
-			// Break date axis
-			var previousDate;
-			var totalDateDifference = 0;
-
-			for( var dataIndex in chart.data ) {
-				data = chart.data[dataIndex];
-
-				if ( dataIndex == 0 ) {
-					previousDate = data.date;
-					continue;
-				}
-
-				totalDateDifference += data.date - previousDate;
-
-				previousDate = data.date;
-			}
-
-			var breakThreshold = ( totalDateDifference / chart.data.length ) * 2;
-
-			for( var dataIndex in chart.data ) {
-				data = chart.data[dataIndex];
-
-				if ( dataIndex == 0 ) {
-					previousDate = data.date;
-					continue;
-				}
-
-				if ( data.date - previousDate > breakThreshold ) {
-					let dateAxisBreak = dateAxis.axisBreaks.create();
-					dateAxisBreak.startDate = previousDate;
-					dateAxisBreak.endDate = data.date;
-					dateAxisBreak.breakSize = 0;
-				}
-
-				previousDate = data.date;
-			}
-
 			// Create series
 			var series = chart.series.push(new am4charts.LineSeries());
+			window.series = series;
 			series.dataFields.valueY = "value";
 			series.dataFields.dateX = "date";
-			series.tooltipText = "{value} <? echo $sensor[ 'unit' ]; ?>"
+			series.tooltip.getFillFromObject = false;
+			series.tooltip.background.fill = am4core.color("#00C3FF");
+			series.tooltip.label.interactionsEnabled = true;
+
+			<?
+
+			if ( $is_logged_in ) {
+				echo 'series.tooltipHTML = "<p>{value} ' . $sensor[ 'unit' ] . '</p><input type=\'checkbox\' id=\'chk_anomaly\' onclick=\'window.toggle_anomaly()\'><p>Anomalous reading</p></input>"';
+			} else {
+				echo 'series.tooltipHTML = "<p style=\'margin-top: 4px\'>{value} ' . $sensor[ 'unit' ] . '</p>"';
+			}
+
+			?>
+
+			series.events.on( "tooltipshownat", ( event ) => {
+				setTimeout(() => {
+					if ( event.dataItem.dataContext.anomaly) {
+						$( "#chk_anomaly" ).prop( "checked", true );
+					} else {
+						$( "#chk_anomaly" ).prop( "checked", false );
+					}
+				}, 100);
+			});
+
 			series.strokeWidth = 2;
 			series.minBulletDistance = 15;
+
+			// Break date axis and build anomaly record list
+			var anomalies = [];
+
+			chart.events.on( 'inited', () => {
+				var previousDate;
+				var totalDateDifference = 0;
+
+				for ( var dataIndex in chart.data ) {
+					data = chart.data[dataIndex];
+
+					if ( data.anomaly ) {
+						anomalies.push( dataIndex );
+					}
+
+					if ( dataIndex == 0 ) {
+						previousDate = data.date;
+						continue;
+					}
+
+					totalDateDifference += data.date - previousDate;
+
+					previousDate = data.date;
+				}
+
+				var breakThreshold = ( totalDateDifference / chart.data.length ) * 2;
+
+				for ( var dataIndex in chart.data ) {
+					data = chart.data[dataIndex];
+
+					if ( dataIndex == 0 ) {
+						previousDate = data.date;
+						continue;
+					}
+
+					if ( data.date - previousDate > breakThreshold ) {
+						let dateAxisBreak = dateAxis.axisBreaks.create();
+						dateAxisBreak.startDate = previousDate;
+						dateAxisBreak.endDate = data.date;
+						dateAxisBreak.breakSize = 0;
+					}
+
+					previousDate = data.date;
+				}
+			});
+
+			series.events.on( "datarangechanged", ( event ) => {
+				for ( var anomalyIndex in anomalies ) {
+					anomalyIndex = anomalies[ anomalyIndex ];
+
+					if ( anomalyIndex in series.dataItems.values && series.dataItems.values[ anomalyIndex ].sprites.length != 0 ) {
+						series.dataItems.values[ anomalyIndex ].sprites[0].circle.radius = 5;
+						series.dataItems.values[ anomalyIndex ].sprites[0].circle.stroke = chart.colors.getIndex(9);
+					}
+				}
+			});
+
+			window.toggle_anomaly = function() {
+				if ( !series.tooltip.tooltipDataItem.dataContext.anomaly ) {
+					series.tooltip.tooltipDataItem.sprites[0].circle.radius = 5;
+					series.tooltip.tooltipDataItem.sprites[0].circle.stroke = chart.colors.getIndex(9);
+				} else {
+					series.tooltip.tooltipDataItem.sprites[0].circle.radius = 1.25;
+					series.tooltip.tooltipDataItem.sprites[0].circle.stroke = chart.colors.getIndex(0);
+				}
+
+				series.tooltip.tooltipDataItem.dataContext.anomaly = !series.tooltip.tooltipDataItem.dataContext.anomaly;
+
+				$.ajax({
+					method: "POST",
+					url: "../includes/services/toggleAnomalousReading.php",
+					data: { 
+						sensor_type_uuid: "<? echo $sensor[ 'sensor_type' ] ?>",
+						reading_uuid: series.tooltip.tooltipDataItem.dataContext.uuid
+					}
+				});
+			}
 
 			// Drop-shaped tooltips
 			series.tooltip.background.cornerRadius = 20;
@@ -184,8 +250,8 @@
 			/*
 				WebSockets
 			*/
-			parent.$( parent.document ).on( "sensor_reading", ( event, date, data ) => {
-				window.chart.addData( [ { date: new Date( Date.parse( date ) ), value: data } ] );
+			parent.$( parent.document ).on( "sensor_reading", ( event, date, data, reading_uuid ) => {
+				window.chart.addData( [ { date: new Date( Date.parse( date ) ), value: data, uuid: reading_uuid, anomaly: 0 } ] );
 			} );
 		</script>
 	</head>

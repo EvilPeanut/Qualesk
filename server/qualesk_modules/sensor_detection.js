@@ -52,7 +52,7 @@ detection.create_sensor = function( core, definition, sensor_uuid, sensor_array,
 				if ( err ) throw err;
 			});
 
-			core.mysql_connection.query("CREATE TABLE " + core.config.mysql.database + ".`sensor_" + sensor_type.uuid + "` (`uuid` char(36) NOT NULL, `sensor_uuid` char(36) NOT NULL, `date` datetime(3) NOT NULL, `data` " + sensor_type.data_type + " NOT NULL, PRIMARY KEY (`uuid`)) ENGINE=InnoDB DEFAULT CHARSET=utf8", ( err ) => {
+			core.mysql_connection.query("CREATE TABLE " + core.config.mysql.database + ".`sensor_" + sensor_type.uuid + "` (`uuid` char(36) NOT NULL, `sensor_uuid` char(36) NOT NULL, `date` datetime(3) NOT NULL, `data` " + sensor_type.data_type + " NOT NULL, `anomaly` boolean NOT NULL DEFAULT 0, PRIMARY KEY (`uuid`)) ENGINE=InnoDB DEFAULT CHARSET=utf8", ( err ) => {
 				if ( err ) throw err;
 			});
 		}
