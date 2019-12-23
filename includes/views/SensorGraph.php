@@ -119,7 +119,6 @@
 				upper_urgent_boundary_range.value = upper_urgent_boundary;
 				upper_urgent_boundary_range.endValue = Number.MAX_VALUE;
 				upper_urgent_boundary_range.contents.stroke = chart.colors.getIndex(9);
-				upper_urgent_boundary_range.contents.strokeOpacity = 0.7;
 			}
 
 			if ( upper_warning_boundary ) {
@@ -127,7 +126,6 @@
 				upper_warning_boundary_range.value = upper_warning_boundary;
 				upper_warning_boundary_range.endValue = upper_urgent_boundary ? upper_urgent_boundary : Number.MAX_VALUE;
 				upper_warning_boundary_range.contents.stroke = chart.colors.getIndex(11);
-				upper_warning_boundary_range.contents.strokeOpacity = 0.7;
 			}
 
 			if ( lower_warning_boundary ) {
@@ -135,7 +133,6 @@
 				lower_warning_boundary_range.value = lower_warning_boundary;
 				lower_warning_boundary_range.endValue = lower_urgent_boundary ? lower_urgent_boundary : -Number.MIN_VALUE;
 				lower_warning_boundary_range.contents.stroke = chart.colors.getIndex(11);
-				lower_warning_boundary_range.contents.strokeOpacity = 0.7;
 			}
 
 			if ( lower_urgent_boundary ) {
@@ -143,7 +140,6 @@
 				lower_urgent_boundary_range.value = lower_urgent_boundary;
 				lower_urgent_boundary_range.endValue = -Number.MIN_VALUE;
 				lower_urgent_boundary_range.contents.stroke = chart.colors.getIndex(9);
-				lower_urgent_boundary_range.contents.strokeOpacity = 0.7;
 			}
 
 			});
