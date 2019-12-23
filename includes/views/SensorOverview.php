@@ -56,7 +56,7 @@ $graph_url = "https://" . $_SERVER['SERVER_NAME'] . "/graph/" . substr( $_GET[ '
 			<h1 style="display: inline"><? echo $sensor['name']; ?> Graph</h1>
 			<img style="display: inline; float: right" src="../static/img/icon_share.png" onclick="show_prompt()" />
 
-			<iframe src="../graph/<? echo substr( $_GET[ 'url' ], strrpos( $_GET[ 'url' ], '/' ) + 1 ); ?>" style="width: 100%; height: 520px; border: 0"></iframe>
+			<iframe src="../graph/<? echo substr( $_GET[ 'url' ], strrpos( $_GET[ 'url' ], '/' ) + 1 ); ?>" style="width: 100%; height: 520px; border: 0; margin-top: 8px"></iframe>
 		</div></div>
 
 		<div class="grid-item"><div>
