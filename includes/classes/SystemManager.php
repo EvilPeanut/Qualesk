@@ -142,40 +142,44 @@ class SystemManager
 	public static function print_system_list( $allow_management = false ) {
 		require( 'services/DatabaseConnect.php' );
 
-		if ( $statement = $mysqli->prepare( "SELECT uuid, name, description FROM systems;" ) ) {
+		
+		if ( $statement = $mysqli->prepare( "SELECT sensor_arrays.uuid, sensor_arrays.name, sensor_arrays.description, systems.uuid, systems.name, systems.description FROM sensor_arrays LEFT JOIN systems ON sensor_arrays.system_uuid = systems.uuid ORDER BY systems.uuid DESC;" ) ) {
 			$statement->execute();
 			$statement->store_result();
-			$statement->bind_result( $uuid, $name, $description );
-			
+			$statement->bind_result( $sensor_array_uuid, $sensor_array_name, $sensor_array_description, $system_uuid, $system_name, $system_description );
+
+			$previous_system_uuid = "_";
+
 			while ( $statement->fetch() ) {
 				if ( $allow_management ) {
-					if ( strlen( $description ) > 0 ) {
-						echo "<img src='../static/img/remove.png' style='cursor: pointer' onclick='show_prompt(\"Remove system\", \"Are you sure you want to remove this system?<br><br>Sensor arrays and sensors under this system will also be removed\", \"../includes/services/systemRemove.php?uuid=$uuid\")'><a href='../system/$uuid'><p style='display: inline'> $name <span style='color: grey'> - $description</span></p></a><br>";
-					} else {
-						echo "<img src='../static/img/remove.png' style='cursor: pointer' onclick='show_prompt(\"Remove system\", \"Are you sure you want to remove this system?<br><br>Sensor arrays and sensors under this system will also be removed\", \"../includes/services/systemRemove.php?uuid=$uuid\")'><a href='../system/$uuid'><p style='display: inline'> $name</p></a><br>";
+					if ( $system_uuid != null && $previous_system_uuid != $system_uuid ) {
+						if ( strlen( $system_description ) > 0 ) {
+							echo "<img src='../static/img/remove.png' style='cursor: pointer' onclick='show_prompt(\"Remove system\", \"Are you sure you want to remove this system?<br><br>Sensor arrays and sensors under this system will also be removed\", \"../includes/services/systemRemove.php?uuid=$system_uuid\")'><a href='../system/$system_uuid'><p style='display: inline'> $system_name <span style='color: grey'> - $system_description</span></p></a><br>";
+						} else {
+							echo "<img src='../static/img/remove.png' style='cursor: pointer' onclick='show_prompt(\"Remove system\", \"Are you sure you want to remove this system?<br><br>Sensor arrays and sensors under this system will also be removed\", \"../includes/services/systemRemove.php?uuid=$system_uuid\")'><a href='../system/$system_uuid'><p style='display: inline'> $system_name</p></a><br>";
+						}
 					}
 				} else {
-					if ( strlen( $description ) > 0 ) {
-						echo "<a href='../system/$uuid'><p>$name <span style='color: grey'> - $description</span></p></a><br>";
-					} else {
-						echo "<a href='../system/$uuid'><p>$name</p></a><br>";
-					}
-
-					if ( $array_statement = $mysqli->prepare( "SELECT uuid, name, description FROM sensor_arrays WHERE system_uuid=?;" ) ) {
-						$array_statement->bind_param( 's', $uuid );
-						$array_statement->execute();
-						$array_statement->store_result();
-						$array_statement->bind_result( $sensor_array_uuid, $sensor_array_name, $sensor_array_description );
-						
-						while ( $array_statement->fetch() ) {
-							if ( strlen( $sensor_array_description ) > 0 ) {
-								echo "<p style='margin-left: 16px'>&#8627; <a href='../array/$sensor_array_uuid'>$sensor_array_name <span style='color: grey'> - $sensor_array_description</span></p></a><br>";
+					if ( $previous_system_uuid != $system_uuid ) {
+						if ( $system_name == null ) {
+							echo "<p style='color: #4783ef'>Unknown System</p><br>";
+						} else {
+							if ( strlen( $system_description ) > 0 ) {
+								echo "<a href='../system/$system_uuid'><p>$system_name <span style='color: grey'> - $system_description</span></p></a><br>";
 							} else {
-								echo "<p style='margin-left: 16px'>&#8627; <a href='../array/$sensor_array_uuid'>$sensor_array_name</p></a><br>";
+								echo "<a href='../system/$system_uuid'><p>$system_name</p></a><br>";
 							}
 						}
 					}
+
+					if ( strlen( $sensor_array_description ) > 0 ) {
+						echo "<p style='margin-left: 16px'>&#8627; <a href='../array/$sensor_array_uuid'>$sensor_array_name <span style='color: grey'> - $sensor_array_description</span></p></a><br>";
+					} else {
+						echo "<p style='margin-left: 16px'>&#8627; <a href='../array/$sensor_array_uuid'>$sensor_array_name</p></a><br>";
+					}
 				}
+
+				$previous_system_uuid = $system_uuid;
 			}
 		}
 	}

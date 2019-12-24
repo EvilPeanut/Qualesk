@@ -138,7 +138,7 @@ class SensorArrayManager
 		$previous_system_uuid = NULL;
 		$system = NULL;
 
-		if ( $statement = $mysqli->prepare( "SELECT uuid, name, description, system_uuid FROM sensor_arrays $where_clause ORDER BY system_uuid;" ) ) {
+		if ( $statement = $mysqli->prepare( "SELECT uuid, name, description, system_uuid FROM sensor_arrays $where_clause ORDER BY system_uuid DESC;" ) ) {
 			$statement->execute();
 			$statement->store_result();
 			$statement->bind_result( $uuid, $name, $description, $system_uuid );
@@ -151,7 +151,7 @@ class SensorArrayManager
 						echo "<br>";
 					}
 					
-					echo "<p>" . $system[ 'name' ] . "</p>";
+					echo "<p>" . ( $system[ 'name' ] == null ? "Unknown System" : $system[ 'name' ] ) . "</p>";
 
 					$previous_system_uuid = $system_uuid;
 				}
