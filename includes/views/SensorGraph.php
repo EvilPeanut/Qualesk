@@ -13,7 +13,15 @@
 	$lower_warning_boundary = $sensor[ 'lower_warning_boundary' ];
 	$lower_urgent_boundary = $sensor[ 'lower_urgent_boundary' ];
 
+	$default_colour = $sensor[ 'default_colour' ];
+	$permission_public_graph = $sensor[ 'permission_public_graph' ];
+
 	$is_logged_in = AccountManager::is_logged_in();
+
+	if ( !$permission_public_graph && !$is_logged_in ) {
+		echo '<p>This graph is not visible to the public</p>';
+		exit();
+	}
 
 ?>
 <!DOCTYPE html>
@@ -75,6 +83,7 @@
 			window.series = series;
 			series.dataFields.valueY = "value";
 			series.dataFields.dateX = "date";
+			series.stroke = am4core.color("<? echo $default_colour; ?>");
 			series.tooltip.getFillFromObject = false;
 			series.tooltip.background.fill = am4core.color("#00C3FF");
 			series.tooltip.label.interactionsEnabled = true;

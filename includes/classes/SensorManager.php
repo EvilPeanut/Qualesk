@@ -102,10 +102,10 @@ class SensorManager
 	public static function get_sensor( $sensor_uuid ) {
 		require( 'services/DatabaseConnect.php' );
 
-		if ( $statement = $mysqli->prepare( "SELECT sensor_array_uuid, sensor_type, name, description, upper_urgent_boundary, upper_warning_boundary, lower_warning_boundary, lower_urgent_boundary FROM sensors WHERE uuid='$sensor_uuid';" ) ) {
+		if ( $statement = $mysqli->prepare( "SELECT sensor_array_uuid, sensor_type, name, description, upper_urgent_boundary, upper_warning_boundary, lower_warning_boundary, lower_urgent_boundary, default_colour, permission_public_graph FROM sensors WHERE uuid='$sensor_uuid';" ) ) {
 			$statement->execute();
 			$statement->store_result();
-			$statement->bind_result( $sensor_array_uuid, $sensor_type, $name, $description, $upper_urgent_boundary, $upper_warning_boundary, $lower_warning_boundary, $lower_urgent_boundary );
+			$statement->bind_result( $sensor_array_uuid, $sensor_type, $name, $description, $upper_urgent_boundary, $upper_warning_boundary, $lower_warning_boundary, $lower_urgent_boundary, $default_colour, $permission_public_graph );
 			$statement->fetch();
 
 			$sensor = array();
@@ -117,6 +117,8 @@ class SensorManager
 			$sensor[ 'upper_warning_boundary' ] = $upper_warning_boundary;
 			$sensor[ 'lower_warning_boundary' ] = $lower_warning_boundary;
 			$sensor[ 'lower_urgent_boundary' ] = $lower_urgent_boundary;
+			$sensor[ 'default_colour' ] = $default_colour ? $default_colour : "#67B7DC";
+			$sensor[ 'permission_public_graph' ] = $permission_public_graph;
 
 			$sensor_type = self::get_sensor_type( $sensor_type );
 			$sensor[ 'unit' ] = $sensor_type[ 'unit' ];

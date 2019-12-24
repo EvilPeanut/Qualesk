@@ -44,3 +44,6 @@ a, .inline-button p {
 	padding: 8px 16px;
 	cursor: pointer;
 }
+#div_prompt input[type='checkbox'], div {
+	margin-top: 6px;
+}

@@ -105,6 +105,8 @@ if ( $mysqli->query("SHOW TABLES LIKE 'sensors';")->num_rows > 0 ) {
 		`upper_warning_boundary` tinytext,
 		`lower_warning_boundary` tinytext,
 		`lower_urgent_boundary` tinytext,
+		`default_colour` tinytext,
+		`permission_public_graph` boolean NOT NULL DEFAULT 0,
 		PRIMARY KEY (`uuid`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 	")->execute();
