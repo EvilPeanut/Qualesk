@@ -39,6 +39,17 @@
 			}
 
 			?>
+
+			// Automatically zoom map to display all markers
+			if ( Object.keys( markers ).length > 1 ) {
+				var bounds = new google.maps.LatLngBounds();
+
+				for ( var key in markers ) {
+					bounds.extend( markers[ key ].position );
+				}
+
+				map.fitBounds( bounds );
+			}
 		}
 	</script>
 
