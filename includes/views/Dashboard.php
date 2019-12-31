@@ -13,7 +13,7 @@
 	<link rel="icon" type="image/x-icon" href="../static/img/favicon.png" />
 	<script src="../static/js/jquery-3.4.0.min.js"></script>
 	<script>
-		var elementCount = <? echo count( $dashboard[ 'data' ] ); ?>;
+		var elementCount = <? echo is_array( $dashboard[ 'data' ] ) ? count( $dashboard[ 'data' ] ) : 0; ?>;
 
 		function removeElement( id, uuid ) {
 			$( "#element" + id ).remove();
@@ -58,7 +58,7 @@
 
 		include 'elements/topBar.php'; 
 
-		if ( count( $dashboard[ 'data' ] ) != 0 ) {
+		if ( is_array( $dashboard[ 'data' ] ) && count( $dashboard[ 'data' ] ) != 0 ) {
 			foreach ( $dashboard[ 'data' ] as $key => $element ) {
 				if ( $element->type == "Graph" ) {
 					echo "<div id='element" . $key . "' class='grid-item grid-item-1x1'><div><h1 style='display: inline'>" . SensorManager::get_sensor( $element->uuid )[ 'name' ] . " Graph</h1><img style='display: inline; float: right; cursor: pointer' src='../static/img/icon_close.png' onclick='removeElement(" . $key . ", \"" . $element->uuid . "\")'/><iframe src='../graph/" . $element->uuid . "' style='width: 100%; height: 520px; border: 0; margin-top: 8px'></iframe></div></div>";
