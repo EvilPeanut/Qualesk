@@ -44,6 +44,8 @@ if ( !AccountManager::has_permission( 'admin_features' ) ) {
 				<input type="submit" value="Create Sensor Type">
 			</form>
 		</div></div>
+
+		<? include 'elements/bottomBar.php'; ?>
 	</div>
 </body>
 </html>

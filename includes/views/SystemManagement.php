@@ -31,6 +31,8 @@ if ( !AccountManager::has_permission( 'admin_features' ) ) {
 				<input type="submit" value="Create System">
 			</form>
 		</div></div>
+
+		<? include 'elements/bottomBar.php'; ?>
 	</div>
 </body>
 </html>

@@ -71,6 +71,8 @@ $system_center = SystemManager::get_system_center();
 				<input type="submit" value="Import Sensor Array Sensors">
 			</form>
 		</div></div>
+
+		<? include 'elements/bottomBar.php'; ?>
 	</div>
 </body>
 </html>

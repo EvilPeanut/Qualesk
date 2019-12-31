@@ -78,6 +78,8 @@
 		</div></div>
 
 		<div class="grid-item"><? include 'elements/panels/eventsLog.php' ?></div>
+
+		<? include 'elements/bottomBar.php'; ?>
 	</div>
 </body>
 </html>

@@ -131,6 +131,8 @@ $graph_url = "https://" . $_SERVER['SERVER_NAME'] . "/graph/" . substr( $_GET[ '
 			include 'elements/panels/sensorSetBoundaries.php';
 		}
 
+		include 'elements/bottomBar.php';
+
 		?>
 	</div>
 </body>

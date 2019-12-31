@@ -68,6 +68,8 @@ move_uploaded_file( $_FILES[ "CSVfile" ][ "tmp_name" ], sys_get_temp_dir() . $_F
 			<p>Data Point Creation</p>
 			<progress value="0" id="data_create_pb" style="width: 100%"></progress>
 		</div></div>
+
+		<? include 'elements/bottomBar.php'; ?>
 	</div>
 </body>
 </html>

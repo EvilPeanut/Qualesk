@@ -22,6 +22,8 @@
 			}
 			?>
 		</div>
+
+		<? include 'elements/bottomBar.php'; ?>
 	</div>
 </body>
 </html>

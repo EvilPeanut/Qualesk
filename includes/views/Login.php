@@ -19,6 +19,8 @@
 				<input type="submit" value="Login">
 			</form>
 		</div></div>
+
+		<? include 'elements/bottomBar.php'; ?>
 	</div>
 </body>
 </html>

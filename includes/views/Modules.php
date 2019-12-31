@@ -27,6 +27,8 @@ if ( !AccountManager::has_permission( 'admin_features' ) ) {
 
 			?>
 		</div></div>
+
+		<? include 'elements/bottomBar.php'; ?>
 	</div>
 </body>
 </html>

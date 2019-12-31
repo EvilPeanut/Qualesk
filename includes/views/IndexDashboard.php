@@ -28,6 +28,8 @@
 			include 'elements/panels/adminLinks.php';
 		}
 
+		include 'elements/bottomBar.php'; 
+
 		?>
 	</div>
 </body>

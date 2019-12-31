@@ -36,6 +36,8 @@ if ( !AccountManager::has_permission( 'admin_features' ) ) {
 			<h1>Recent Logins <span style="color: grey; font-size: small"><? echo Admin::get_login_count(); ?> total</span></h1>
 			<? Admin::PrintRecentLogins(); ?>
 		</div></div>
+
+		<? include 'elements/bottomBar.php'; ?>
 	</div>
 </body>
 </html>
