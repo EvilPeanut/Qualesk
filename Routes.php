@@ -6,7 +6,7 @@ Route::set( '/^$/' , function() {
 	if ( Config::get( 'installed' ) == 1 ) {
 		require_once( 'classes/accountManager.php' );
 		if ( AccountManager::is_logged_in() ) {
-			Dashboard::CreateView( 'Dashboard' );
+			Dashboard::CreateView( 'IndexDashboard' );
 		} else {
 			Login::CreateView( 'Login' );
 		}
@@ -53,6 +53,10 @@ Route::set( '/(sensor\/.*)/' , function() {
 
 Route::set( '/(graph\/.*)/' , function() {
 	Generic::CreateView( 'SensorGraph' );
+});
+
+Route::set( '/(dashboard\/.*)/' , function() {
+	Generic::CreateView( 'Dashboard' );
 });
 
 Route::set( '/^noperm$/' , function() {

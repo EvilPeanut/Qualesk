@@ -146,4 +146,20 @@ if ( $mysqli->query("SHOW TABLES LIKE 'logs';")->num_rows > 0 ) {
 	echo 'Done!<br>';
 }
 
+if ( $mysqli->query("SHOW TABLES LIKE 'dashboards';")->num_rows > 0 ) {
+	echo 'Dashboards table exists<br>';
+} else {
+	echo 'Dashboards table does not exist. Creating it...<br>';
+	$mysqli->prepare("
+		CREATE TABLE `dashboards` (
+		`uuid` char(36) NOT NULL,
+		`name` tinytext NOT NULL,
+		`description` tinytext,
+		`dash_json` JSON,
+		PRIMARY KEY (`uuid`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	")->execute();
+	echo 'Done!<br>';
+}
+
 ?>

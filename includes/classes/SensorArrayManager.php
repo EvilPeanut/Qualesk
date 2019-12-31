@@ -151,16 +151,16 @@ class SensorArrayManager
 						echo "<br>";
 					}
 					
-					echo "<p>" . ( $system[ 'name' ] == null ? "Unknown System" : $system[ 'name' ] ) . "</p>";
+					echo "<p style='margin: 0px 0px 8px 8px'>" . ( $system[ 'name' ] == null ? "Unknown System" : $system[ 'name' ] ) . "</p>";
 
 					$previous_system_uuid = $system_uuid;
 				}
 
 				if ( $allow_management ) {
 					if ( strlen( $description ) > 0 ) {
-						echo "<img src='../static/img/remove.png' style='cursor: pointer' onclick='show_prompt(\"Remove sensor array\", \"Are you sure you want to remove this sensor array?<br><br>Sensors under this sensor array will also be removed\", \"../includes/services/sensorArrayRemove.php?uuid=$uuid\")'><a href='../array/$uuid'><p style='display: inline'> $name <span style='color: grey'> - $description</span></p></a><br>";
+						echo "<img src='../static/img/remove.png' style='cursor: pointer' onclick='show_prompt(\"Remove sensor array\", \"Are you sure you want to remove this sensor array?<br><br>Sensors under this sensor array will also be removed\", \"../includes/services/sensorArrayRemove.php?uuid=$uuid\")'><a href='../array/$uuid'><p style='display: inline-block; margin: 0px 0px 8px 8px'> $name <span style='color: grey'> - $description</span></p></a><br>";
 					} else {
-						echo "<img src='../static/img/remove.png' style='cursor: pointer' onclick='show_prompt(\"Remove sensor array\", \"Are you sure you want to remove this sensor array?<br><br>Sensors under this sensor array will also be removed\", \"../includes/services/sensorArrayRemove.php?uuid=$uuid\")'><a href='../array/$uuid'><p style='display: inline'> $name</p></a><br>";
+						echo "<img src='../static/img/remove.png' style='cursor: pointer' onclick='show_prompt(\"Remove sensor array\", \"Are you sure you want to remove this sensor array?<br><br>Sensors under this sensor array will also be removed\", \"../includes/services/sensorArrayRemove.php?uuid=$uuid\")'><a href='../array/$uuid'><p style='display: inline-block; margin: 0px 0px 8px 8px'> $name</p></a><br>";
 					}
 				} else {
 					if ( strlen( $description ) > 0 ) {

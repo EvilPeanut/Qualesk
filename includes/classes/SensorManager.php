@@ -231,6 +231,36 @@ class SensorManager
 		}
 	}
 
+	public static function get_sensor_list() {
+		require( 'services/DatabaseConnect.php' );
+
+		$previous_sensor_array_uuid = NULL;
+		$sensor_array = NULL;
+
+		$sensor_list = array();
+
+		if ( $statement = $mysqli->prepare( "SELECT uuid, name, description, sensor_array_uuid FROM sensors ORDER BY sensor_array_uuid;" ) ) {
+			$statement->execute();
+			$statement->store_result();
+			$statement->bind_result( $uuid, $name, $description, $sensor_array_uuid );
+			
+			while ( $statement->fetch() ) {
+				if ( $sensor_array_uuid != $previous_sensor_array_uuid ) {
+					$sensor_array = SensorArrayManager::get_sensor_array( $sensor_array_uuid );
+
+					$previous_sensor_array_uuid = $sensor_array_uuid;
+				}
+
+				$sensor_list[ $uuid ] = array();
+				$sensor_list[ $uuid ][ 'name' ] = $name;
+				$sensor_list[ $uuid ][ 'description' ] = $name;
+				$sensor_list[ $uuid ][ 'sensor_array' ] = $sensor_array;
+			}
+
+			return $sensor_list;
+		}
+	}
+
 	public static function print_sensor_list( $allow_management = false, $sensor_array_uuid = NULL ) {
 		require( 'services/DatabaseConnect.php' );
 
@@ -256,16 +286,16 @@ class SensorManager
 						echo "<br>";
 					}
 
-					echo "<p>" . $sensor_array[ 'name' ] . "</p>";
+					echo "<p style='margin: 0px 0px 8px 8px'>" . $sensor_array[ 'name' ] . "</p>";
 
 					$previous_sensor_array_uuid = $sensor_array_uuid;
 				}
 
 				if ( $allow_management ) {
 					if ( strlen( $description ) > 0 ) {
-						echo "<img src='../static/img/remove.png' style='cursor: pointer' onclick='show_prompt(\"Remove sensor\", \"Are you sure you want to remove this sensor?\", \"../includes/services/sensorRemove.php?uuid=$uuid\")'><a href='../sensor/$uuid'><p style='display: inline'> $name <span style='color: grey'> - $description</span></p></a><br>";
+						echo "<img src='../static/img/remove.png' style='cursor: pointer' onclick='show_prompt(\"Remove sensor\", \"Are you sure you want to remove this sensor?\", \"../includes/services/sensorRemove.php?uuid=$uuid\")'><a href='../sensor/$uuid'><p style='display: inline-block; margin: 0px 0px 8px 8px'> $name <span style='color: grey'> - $description</span></p></a><br>";
 					} else {
-						echo "<img src='../static/img/remove.png' style='cursor: pointer' onclick='show_prompt(\"Remove sensor\", \"Are you sure you want to remove this sensor?\", \"../includes/services/sensorRemove.php?uuid=$uuid\")'><a href='../sensor/$uuid'><p style='display: inline'> $name</p></a><br>";
+						echo "<img src='../static/img/remove.png' style='cursor: pointer' onclick='show_prompt(\"Remove sensor\", \"Are you sure you want to remove this sensor?\", \"../includes/services/sensorRemove.php?uuid=$uuid\")'><a href='../sensor/$uuid'><p style='display: inline-block; margin: 0px 0px 8px 8px'> $name</p></a><br>";
 					}
 				} else {
 					if ( strlen( $description ) > 0 ) {

@@ -154,9 +154,9 @@ class SystemManager
 				if ( $allow_management ) {
 					if ( $system_uuid != null && $previous_system_uuid != $system_uuid ) {
 						if ( strlen( $system_description ) > 0 ) {
-							echo "<img src='../static/img/remove.png' style='cursor: pointer' onclick='show_prompt(\"Remove system\", \"Are you sure you want to remove this system?<br><br>Sensor arrays and sensors under this system will also be removed\", \"../includes/services/systemRemove.php?uuid=$system_uuid\")'><a href='../system/$system_uuid'><p style='display: inline'> $system_name <span style='color: grey'> - $system_description</span></p></a><br>";
+							echo "<img src='../static/img/remove.png' style='cursor: pointer' onclick='show_prompt(\"Remove system\", \"Are you sure you want to remove this system?<br><br>Sensor arrays and sensors under this system will also be removed\", \"../includes/services/systemRemove.php?uuid=$system_uuid\")'><a href='../system/$system_uuid'><p style='display: inline-block; margin: 0px 0px 8px 8px'> $system_name <span style='color: grey'> - $system_description</span></p></a><br>";
 						} else {
-							echo "<img src='../static/img/remove.png' style='cursor: pointer' onclick='show_prompt(\"Remove system\", \"Are you sure you want to remove this system?<br><br>Sensor arrays and sensors under this system will also be removed\", \"../includes/services/systemRemove.php?uuid=$system_uuid\")'><a href='../system/$system_uuid'><p style='display: inline'> $system_name</p></a><br>";
+							echo "<img src='../static/img/remove.png' style='cursor: pointer' onclick='show_prompt(\"Remove system\", \"Are you sure you want to remove this system?<br><br>Sensor arrays and sensors under this system will also be removed\", \"../includes/services/systemRemove.php?uuid=$system_uuid\")'><a href='../system/$system_uuid'><p style='display: inline-block; margin: 0px 0px 8px 8px'> $system_name</p></a><br>";
 						}
 					}
 				} else {
