@@ -18,7 +18,7 @@ if ( !AccountManager::has_permission( 'admin_features' ) ) {
 		<? include 'elements/topBar.php'; ?>
 
 		<div class="grid-item"><div>
-			<h1>Modules <span style="color: grey; font-size: small"><? echo ModuleManager::get_count(); ?> total</span></h1>
+			<h1>Modules <span style="color: grey; font-size: small"><? echo ModuleManager::get_count(); ?> Total</span></h1>
 			<?
 
 			foreach (ModuleManager::get_list() as $module) {

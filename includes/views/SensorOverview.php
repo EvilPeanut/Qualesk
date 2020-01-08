@@ -109,10 +109,10 @@ $graph_url = "https://" . $_SERVER['SERVER_NAME'] . "/graph/" . substr( $_GET[ '
 				*/
 				$( document ).on( "sensor_reading", ( event, date, data ) => {
 					$( "#sensor_readings" ).prepend( "<p>" + date + " = " + data + " <? echo $sensor[ 'unit' ]; ?></p>" );
-					$( "#reading_total" ).text( $( "#sensor_readings > p" ).length + " total" );
+					$( "#reading_total" ).text( $( "#sensor_readings > p" ).length + " Total" );
 				} );
 			</script>
-			<h1><? echo $sensor[ 'name' ]; ?> Readings <span id="reading_total" style="color: grey; font-size: small"><? echo count( $sensor_readings ); ?> total</span></h1>
+			<h1><? echo $sensor[ 'name' ]; ?> Readings <span id="reading_total" style="color: grey; font-size: small"><? echo count( $sensor_readings ); ?> Total</span></h1>
 			<div id="sensor_readings" style="height: 320px; overflow-y: auto">
 				<?
 
