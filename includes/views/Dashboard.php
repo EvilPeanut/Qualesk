@@ -68,7 +68,7 @@
 
 		?>
 
-		<div id="div_add" class="grid-item grid-item-1x1" style="background: none; border: 2px dashed #4994AB; position: relative; min-height: 160px"><div>
+		<div id="div_add" class="grid-item grid-item-1x1" style="background: none; border: 2px dashed rgba(255, 255, 255, 0.5); position: relative; min-height: 160px"><div>
 			<img id="icon_add" src="../static/img/tile_add_graph.png" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); cursor: pointer" onclick="showAddElements()"/>
 			<div id="div_add_items" style="display: none">
 				<h1 style='display: inline'>Sensor Graphs</h1>
