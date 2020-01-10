@@ -73,13 +73,13 @@
 			<div id="div_add_items" style="display: none">
 				<h1 style='display: inline'>Sensor Graphs</h1>
 				<img style='display: inline; float: right; cursor: pointer' src='../static/img/icon_close.png' onclick="hideAddElements()"/>
-				<div style="max-height: 512px; overflow-y: auto">
+				<div style="margin-top: 16px; max-height: 512px; overflow-y: auto">
 				<?
 
 				$sensor_list = SensorManager::get_sensor_list();
 
 				foreach ( $sensor_list as $sensor_uuid => $sensor ) {
-					echo "<p style='cursor: pointer' onclick='addGraph(\"" . $sensor[ 'name' ] . "\", \"" . $sensor_uuid . "\")'>" . $sensor[ 'sensor_array' ][ 'name' ] . " - " . $sensor[ 'name' ] . "</p>";
+					echo "<p style='cursor: pointer; background-color: #48a4ff; color: white; padding: 8px 8px; border-bottom: 1px solid white' onclick='addGraph(\"" . $sensor[ 'name' ] . "\", \"" . $sensor_uuid . "\")'>" . $sensor[ 'sensor_array' ][ 'name' ] . " - " . $sensor[ 'name' ] . "</p>";
 				}
 
 				?>
