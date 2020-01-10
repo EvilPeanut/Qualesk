@@ -48,3 +48,9 @@ a, .inline-button p {
 #div_prompt input[type='checkbox'], #div_prompt div {
 	margin-top: 6px;
 }
+img[src*="../static/img/remove.png"] {
+	filter: opacity(0.5);
+}
+img[src*="../static/img/remove.png"]:hover {
+	filter: opacity(1);
+}
