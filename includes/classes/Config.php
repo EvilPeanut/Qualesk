@@ -16,7 +16,11 @@ class Config
 	}
 
 	public static function get( $property ) {
-		return self::$config[ $property ];
+		if ( array_key_exists( $property, self::$config ) ) {
+			return self::$config[ $property ];
+		} else {
+			return null;
+		}
 	}
 
 	public static function set( $property, $value ) {
