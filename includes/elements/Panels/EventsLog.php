@@ -79,7 +79,7 @@ $( document ).ready( () => {
 			} );
 		}
 	</script>
-	<div id="div_log" style="height: 280px; margin-top: 8px; overflow-y: auto">
+	<div id="div_log" style="height: 400px; margin-top: 8px; overflow-y: auto">
 		<?
 
 		if ( isset( $system_uuid ) ) {
