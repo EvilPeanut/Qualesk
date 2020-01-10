@@ -48,7 +48,7 @@
 					bounds.extend( markers[ key ].position );
 				}
 
-				map.fitBounds( bounds );
+				map.fitBounds( bounds, 50 );
 			}
 		}
 	</script>
