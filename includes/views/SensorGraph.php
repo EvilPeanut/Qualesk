@@ -264,7 +264,7 @@
 			} );
 		</script>
 	</head>
-	<body style="height: 100%; margin: 0px">
+	<body style="height: 100%; margin: 0px; overflow: hidden">
 		<div id="chartdiv" style="height: 100%"></div>
 	</body>
 </html>
