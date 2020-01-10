@@ -4,8 +4,8 @@ require_once( 'services/DatabaseConnect.php' );
 
 session_start();
 
-$username = $_POST[ 'username' ];
-$password = $_POST[ 'password' ];
+$username = $_REQUEST[ "username" ];
+$password = $_REQUEST[ "password" ];
 
 if ( $statement = $mysqli->prepare( "SELECT user_id, password, password_salt FROM users WHERE username = ? LIMIT 1" ) ) {
 	$statement->bind_param( 's', $username );
@@ -26,10 +26,9 @@ if ( $statement = $mysqli->prepare( "SELECT user_id, password, password_salt FRO
 			$statement->execute();
 		}
 
-		header( 'Location: ' . $_SERVER[ 'HTTP_REFERER' ] );
+		echo true;
 	} else {
-		// TODO: Handle incorrect password
-		header( 'Location: ' . $_SERVER[ 'HTTP_REFERER' ] );
+		echo false;
 	}
 }
 
