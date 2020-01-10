@@ -33,7 +33,7 @@ class LogManager
 					$style = "";
 				}
 
-				echo "<div style='$style' severity=$type><img style='padding: 4px 0px 0px 4px' src='../static/img/$icon.png'><p style='display: inline'> $date: <a href='../sensor/$sensor_uuid'>$message</a></p></div>";
+				echo "<div style='$style' severity=$type><img style='padding: 4px 0px 0px 4px' src='../static/img/$icon.png'><p style='display: inline'><span style='padding: 0px 8px'>$date</span><a href='../sensor/$sensor_uuid'>$message</a></p></div>";
 			}
 		}
 	}

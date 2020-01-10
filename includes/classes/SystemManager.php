@@ -173,9 +173,9 @@ class SystemManager
 					}
 
 					if ( strlen( $sensor_array_description ) > 0 ) {
-						echo "<p style='margin-left: 16px'>&#8627; <a href='../array/$sensor_array_uuid'>$sensor_array_name <span style='color: grey'> - $sensor_array_description</span></p></a><br>";
+						echo "<p style='margin-left: 16px'><span style='color: #7bbdff'>&#8627;</span> <a href='../array/$sensor_array_uuid'>$sensor_array_name <span style='color: grey'> - $sensor_array_description</span></p></a><br>";
 					} else {
-						echo "<p style='margin-left: 16px'>&#8627; <a href='../array/$sensor_array_uuid'>$sensor_array_name</p></a><br>";
+						echo "<p style='margin-left: 16px'><span style='color: #7bbdff'>&#8627;</span> <a href='../array/$sensor_array_uuid'>$sensor_array_name</p></a><br>";
 					}
 				}
 

@@ -40,7 +40,7 @@ function connect() {
 				style = 'background-color: rgba(255, 0, 0, 0.2)';
 			}
 
-			$( "#div_log" ).prepend( "<div style='" + style + "' severity='" + json.severity + "'><img style='padding: 4px 0px 0px 4px' src='" + icon + "'><p style='display: inline'> " + json.date.slice(0, -4) + ": <a href='../sensor/" + json.sensor_uuid + "'>" + json.message + "</a></p></div>" );
+			$( "#div_log" ).prepend( "<div style='" + style + "' severity='" + json.severity + "'><img style='padding: 4px 0px 0px 4px' src='" + icon + "'><p style='display: inline'><span style='padding: 0px 8px'>" + json.date.slice(0, -4) + "</span><a href='../sensor/" + json.sensor_uuid + "'>" + json.message + "</a></p></div>" );
 
 			refresh_log_filter();
 		}
