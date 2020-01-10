@@ -58,6 +58,9 @@
 			var chart = am4core.create("chartdiv", am4charts.XYChart);
 			window.chart = chart;
 
+			// Set data date format
+			chart.dateFormatter.dateFormat = "YYYY-MM-DD HH:mm:ss.SSS";
+
 			// Add data
 			chart.data = [
 			<?
