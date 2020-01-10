@@ -157,7 +157,7 @@ class SensorManager
 			$filter = "AND date BETWEEN '$filter_date_min' AND '$filter_date_max'";
 		}
 
-		if ( $statement = $mysqli->prepare( "SELECT uuid, CONCAT(date), data, anomaly FROM `sensor_$sensor_type_uuid` WHERE sensor_uuid='$sensor_uuid' $filter ORDER BY date;" ) ) {
+		if ( $statement = $mysqli->prepare( "SELECT uuid, CONCAT(DATE_FORMAT(date, '%Y-%m-%dT%H:%i:%s.%f')), data, anomaly FROM `sensor_$sensor_type_uuid` WHERE sensor_uuid='$sensor_uuid' $filter ORDER BY date;" ) ) {
 			$statement->execute();
 			$statement->store_result();
 			$statement->bind_result( $uuid, $date, $data, $anomaly );

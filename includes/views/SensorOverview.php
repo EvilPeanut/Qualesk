@@ -117,7 +117,7 @@ $graph_url = "https://" . $_SERVER['SERVER_NAME'] . "/graph/" . substr( $_GET[ '
 				<?
 
 				foreach ( array_reverse( $sensor_readings ) as $uuid => $sensor_reading ) {
-					echo "<p>" . $sensor_reading[ 'date' ] . " = " . $sensor_reading[ 'data' ] . " " . $sensor_reading[ 'unit' ] . "</p>";
+					echo "<p>" . str_replace( 'T', ' ', $sensor_reading[ 'date' ] ) . " = " . $sensor_reading[ 'data' ] . " " . $sensor_reading[ 'unit' ] . "</p>";
 				}
 
 				?>
