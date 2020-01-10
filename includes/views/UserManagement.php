@@ -19,7 +19,7 @@ if ( !AccountManager::has_permission( 'admin_features' ) ) {
 		<? include 'elements/prompt.php'; ?>
 
 		<div class="grid-item"><div>
-			<h1>Users <span style="color: grey; font-size: small"><? echo Admin::get_count(); ?> total</span></h1>
+			<h1>Users <span style="color: grey; font-size: small"><? echo Admin::get_count(); ?> Total</span></h1>
 			<? Admin::PrintUserList(); ?>
 		</div></div>
 
@@ -33,7 +33,7 @@ if ( !AccountManager::has_permission( 'admin_features' ) ) {
 		</div></div>
 
 		<div class="grid-item"><div>
-			<h1>Recent Logins <span style="color: grey; font-size: small"><? echo Admin::get_login_count(); ?> total</span></h1>
+			<h1>Recent Logins <span style="color: grey; font-size: small"><? echo Admin::get_login_count(); ?> Total</span></h1>
 			<? Admin::PrintRecentLogins(); ?>
 		</div></div>
 

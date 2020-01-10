@@ -14,7 +14,7 @@
 <!-- Add prompt -->
 
 <div class="grid-item"><div>
-	<h1 style="display: inline">Dashboards <span style="color: grey; font-size: small"><? echo DashboardManager::get_count(); ?> total</span></h1>
+	<h1 style="display: inline">Dashboards <span style="color: grey; font-size: small"><? echo DashboardManager::get_count(); ?> Total</span></h1>
 	<img style="display: inline; float: right; cursor: pointer" src="../static/img/icon_add.png" onclick="$( '#div_overlay_add' ).show()"/>
 	<div style="height: 512px; margin-top: 16px; overflow-y: auto">
 		<? DashboardManager::print_list( true ); ?>

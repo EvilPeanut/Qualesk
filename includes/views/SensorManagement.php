@@ -19,7 +19,7 @@ if ( !AccountManager::has_permission( 'admin_features' ) ) {
 		<? include 'elements/prompt.php'; ?>
 
 		<div class="grid-item"><div>
-			<h1>Sensors  <span style="color: grey; font-size: small"><? echo SensorManager::get_count(); ?> total</span></h1>
+			<h1>Sensors  <span style="color: grey; font-size: small"><? echo SensorManager::get_count(); ?> Total</span></h1>
 			<? SensorManager::print_sensor_list( true ); ?>
 		</div></div>
 

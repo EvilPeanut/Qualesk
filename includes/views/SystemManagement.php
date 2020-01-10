@@ -19,7 +19,7 @@ if ( !AccountManager::has_permission( 'admin_features' ) ) {
 		<? include 'elements/prompt.php'; ?>
 
 		<div class="grid-item"><div>
-			<h1>Systems <span style="color: grey; font-size: small"><? echo SystemManager::get_count(); ?> total</span></h1>
+			<h1>Systems <span style="color: grey; font-size: small"><? echo SystemManager::get_count(); ?> Total</span></h1>
 			<? SystemManager::print_system_list( true ); ?>
 		</div></div>
 

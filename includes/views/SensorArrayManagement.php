@@ -45,7 +45,7 @@ $system_center = SystemManager::get_system_center();
 		<? include 'elements/prompt.php'; ?>
 
 		<div class="grid-item"><div>
-			<h1>Sensor Arrays <span style="color: grey; font-size: small"><? echo SensorArrayManager::get_count(); ?> total</span></h1>
+			<h1>Sensor Arrays <span style="color: grey; font-size: small"><? echo SensorArrayManager::get_count(); ?> Total</span></h1>
 			<? SensorArrayManager::print_sensor_array_list( true ); ?>
 		</div></div>
 

@@ -51,7 +51,7 @@
 		</div></div>
 
 		<div class="grid-item"><div>
-			<h1>Sensors <span style="color: grey; font-size: small"><? echo SensorManager::get_count( $sensor_array_uuid ); ?> total</span></h1>
+			<h1>Sensors <span style="color: grey; font-size: small"><? echo SensorManager::get_count( $sensor_array_uuid ); ?> Total</span></h1>
 			<? SensorManager::print_sensor_list( false, $sensor_array_uuid ); ?>
 		</div></div>
 
