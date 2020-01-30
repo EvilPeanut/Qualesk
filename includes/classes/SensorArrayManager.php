@@ -6,7 +6,7 @@ class SensorArrayManager
 {
 
 	public static function create_sensor_array( $name, $description, $longitude, $latitude, $system ) {
-		require_once( 'services/DatabaseConnect.php' );
+		require( 'services/DatabaseConnect.php' );
 
 		// Generate sensor array uuid
 		$sensor_array_uuid = guidv4();
@@ -18,6 +18,9 @@ class SensorArrayManager
 				// TODO: Handle SQL error
 			}
 		}
+
+		// Return UUID
+		return $sensor_array_uuid;
 	}
 
 	public static function remove_sensor_array( $uuid ) {

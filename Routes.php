@@ -35,6 +35,10 @@ Route::set( '/^admin\/array-import$/' , function() {
 	Admin::CreateView( 'SensorArrayImport' );
 });
 
+Route::set( '/^admin\/hydrovu-import$/' , function() {
+	Admin::CreateView( 'HydroVuImport' );
+});
+
 Route::set( '/^admin\/sensors$/' , function() {
 	Admin::CreateView( 'SensorManagement' );
 });

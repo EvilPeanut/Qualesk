@@ -6,7 +6,7 @@ class SystemManager
 {
 
 	public static function create_system( $name, $description ) {
-		require_once( 'services/DatabaseConnect.php' );
+		require( 'services/DatabaseConnect.php' );
 
 		// Generate system uuid
 		$system_uuid = guidv4();
@@ -18,6 +18,9 @@ class SystemManager
 				// TODO: Handle SQL error
 			}
 		}
+
+		// Return UUID
+		return $system_uuid;
 	}
 
 	public static function remove_system( $uuid ) {

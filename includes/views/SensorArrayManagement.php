@@ -63,7 +63,18 @@ $system_center = SystemManager::get_system_center();
 		</div></div>
 
 		<div class="grid-item"><div>
-			<h1>Import Sensor Array Sensors</h1>
+			<h1>Import From HydroVu</h1>
+
+			<form action="../admin/hydrovu-import" method="post" enctype="multipart/form-data">
+				<div><p>Client ID</p><input type="text" name="client_id"><br><br></div>
+				<div><p>Client Secret</p><input type="text" name="client_secret"><br><br></div>
+				<input type="submit" value="Import">
+			</form>
+		</div></div>
+
+		<div class="grid-item"><div>
+			<h1>Import From CSV</h1>
+
 			<form action="../admin/array-import" method="post" enctype="multipart/form-data">
 				<div style="display: inline-block"><p>Sensor Array</p><? SensorArrayManager::create_sensor_array_dropdown(); ?></div>
 				<br><br>
