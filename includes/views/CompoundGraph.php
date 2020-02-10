@@ -63,17 +63,29 @@
 
 			var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
 
+			// Create a horizontal scrollbar with preview and place it underneath the date axis
+			chart.scrollbarX = new am4charts.XYChartScrollbar();
+			chart.scrollbarX.parent = chart.bottomAxesContainer;
+
 			// Create series
 			function createSeries( index, name, unit ) {
+				var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+
+				if (chart.yAxes.indexOf(valueAxis) != 0) {
+					valueAxis.syncWithAxis = chart.yAxes.getIndex(0);
+				}
+
 				var series = chart.series.push(new am4charts.LineSeries());
 				window.series = series;
 
 				series.name = name;
 
+				series.yAxis = valueAxis;
+
 				series.dataFields.valueY = "value" + index;
 				series.dataFields.dateX = "date" + index;
 				series.tooltip.getFillFromObject = false;
-				series.tooltip.background.fill = am4core.color("#00C3FF");
+				series.tooltip.background.fill = series.stroke;
 				series.tooltip.label.interactionsEnabled = true;
 
 				series.tooltipHTML = "<p style=\'margin-top: 4px\'>{value" + index + "} " + unit + "</p>";
@@ -104,6 +116,15 @@
 				chart.cursor.behavior = "panXY";
 				chart.cursor.xAxis = dateAxis;
 				chart.cursor.snapToSeries = series;
+
+				// y-Axis Options
+				valueAxis.renderer.line.strokeOpacity = 1;
+				valueAxis.renderer.line.strokeWidth = 2;
+				valueAxis.renderer.line.stroke = series.stroke;
+				valueAxis.renderer.labels.template.fill = series.stroke;
+
+				// Add to date slider
+				chart.scrollbarX.series.push(series);
 			}
 
 			<?
@@ -156,21 +177,13 @@
 				}
 			});
 
-			// Create vertical scrollbar and place it before the value axis
-			chart.scrollbarY = new am4core.Scrollbar();
-			chart.scrollbarY.parent = chart.leftAxesContainer;
-			chart.scrollbarY.toBack();
-
-			// Create a horizontal scrollbar with preview and place it underneath the date axis
-			chart.scrollbarX = new am4charts.XYChartScrollbar();
-			chart.scrollbarX.series.push(window.series);
-			chart.scrollbarX.parent = chart.bottomAxesContainer;
-
 			dateAxis.start = 0.79;
 			dateAxis.keepSelection = true;
 
 			// Legend
 			chart.legend = new am4charts.Legend();
+
+			chart.invalidateData();
 
 			});
 
