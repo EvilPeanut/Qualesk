@@ -183,8 +183,6 @@
 			// Legend
 			chart.legend = new am4charts.Legend();
 
-			chart.invalidateData();
-
 			});
 
 			/*
