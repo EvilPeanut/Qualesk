@@ -41,7 +41,7 @@ class GraphManager
 			$graph[ 'sensor_array_uuid' ] = $sensor_array_uuid;
 			$graph[ 'name' ] = $name;
 			$graph[ 'description' ] = $description;
-			$graph[ 'sensors' ] = json_decode( $sensors_json );
+			$graph[ 'sensors' ] = json_decode( $sensors_json, true );
 
 			return $graph;
 		}
@@ -115,7 +115,7 @@ class GraphManager
 		$graph = GraphManager::get_graph( $graph_uuid );
 
 		if ( ( $key = array_search( $sensor_uuid, $graph[ 'sensors' ] ) ) !== false ) {
-			unset( $graph[ 'sensors' ][ $key ] );
+			array_splice($graph[ 'sensors' ], $key, 1);
 		}
 
 		if ( count( $graph[ 'sensors' ] ) == 0 ) {
