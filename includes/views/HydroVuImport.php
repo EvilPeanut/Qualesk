@@ -28,7 +28,7 @@
 					}
 				},
 				success: function( data ) {
-					//window.history.back();
+					window.history.back();
 				}
 			});
 		});

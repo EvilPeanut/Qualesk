@@ -51,8 +51,16 @@ Route::set( '/(array\/.*)/' , function() {
 	Generic::CreateView( 'SensorArrayOverview' );
 });
 
+Route::set( '/(collective\/.*)/' , function() {
+	Generic::CreateView( 'CompoundGraphOverview' );
+});
+
 Route::set( '/(sensor\/.*)/' , function() {
 	Generic::CreateView( 'SensorOverview' );
+});
+
+Route::set( '/(compound\/.*)/' , function() {
+	Generic::CreateView( 'CompoundGraph' );
 });
 
 Route::set( '/(graph\/.*)/' , function() {
