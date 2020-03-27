@@ -25,17 +25,17 @@
 			$sensor_arrays = SensorArrayManager::get_sensor_arrays();
 
 			foreach ( $sensor_arrays as $uuid => $sensor_array ) {
-				echo "
-				markers['$uuid'] = new google.maps.Marker({position: {lat: " . $sensor_array[ 'latitude' ] . ", lng: " . $sensor_array[ 'longitude' ] . "}, map: map, title: '" . $sensor_array[ 'name' ] . "', icon: '../static/img/maps_sensor_icon.png'});
+				echo '
+				markers["' . $uuid . '"] = new google.maps.Marker({position: {lat: ' . $sensor_array[ "latitude" ] . ', lng: ' . $sensor_array[ "longitude" ] . '}, map: map, title: "' . $sensor_array[ "name" ] . '", icon: "../static/img/maps_sensor_icon.png"});
 
-				info_windows['$uuid'] = new google.maps.InfoWindow({
-					content: '<a href=\'../array/$uuid\'><h1>" . $sensor_array[ 'name' ] . "</h1></a><p>" . $sensor_array[ 'description' ] . "</p>'
+				info_windows["' . $uuid . '"] = new google.maps.InfoWindow({
+					content: "<a href=\"../array/' . $uuid . '\"><h1>' . $sensor_array[ "name" ] . '</h1></a><p>' . $sensor_array[ "description" ] . '</p>"
 				});
 
-				markers['$uuid'].addListener('click', function() {
-					info_windows['$uuid'].open(map, markers['$uuid']);
+				markers["' . $uuid . '"].addListener("click", function() {
+					info_windows["' . $uuid . '"].open(map, markers["' . $uuid . '"]);
 				});
-				";
+				';
 			}
 
 			?>

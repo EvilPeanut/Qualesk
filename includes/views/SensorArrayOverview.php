@@ -50,14 +50,14 @@
 						zoom: 15
 					});";
 
-					echo "new google.maps.Marker({
+					echo 'new google.maps.Marker({
 					position: {
-						lat: " . $sensor_array[ 'latitude' ] . ", 
-						lng: " . $sensor_array[ 'longitude' ] . "}, 
+						lat: ' . $sensor_array[ 'latitude' ] . ', 
+						lng: ' . $sensor_array[ 'longitude' ] . '}, 
 						map: map, 
-						title: '" . $sensor_array[ 'name' ] . "', 
-						icon: '../static/img/maps_sensor_icon.png'
-					});";
+						title: "' . $sensor_array[ 'name' ] . '", 
+						icon: "../static/img/maps_sensor_icon.png"
+					});';
 
 					?>
 				}

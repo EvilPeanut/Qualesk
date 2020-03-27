@@ -1,5 +1,9 @@
 <?
 
+// Ignore user abort and execution time limit
+ignore_user_abort(true);
+set_time_limit(0);
+
 // Flush content to allow us to send data for AJAX
 ob_implicit_flush(true);
 ob_end_flush();
@@ -82,11 +86,12 @@ foreach ($locations as $location) {
 // Get readings and create sensors
 //
 $reading_count = 0;
+$location_index = 0;
 
 foreach ($locations as $location) {
-	echo 'Retrieving readings for location ' . $location['name'];
+	echo 'Initializing location ' . $location['name'] . ' (' . ( $location_index + 1 ) . ' of ' . count( $locations ) . ')';
 
-	$sensor_readings = $hydroVu->get_readings($location['id'], $location['name']);
+	$sensor_readings = $hydroVu->get_readings( $location['id'], $location['name'], $location_index, count( $locations ) );
 	foreach ($sensor_readings as $sensor_name => $sensor) {
 		$sensor_type_uuid = SensorManager::create_sensor_type( $sensor_name, '', 'DOUBLE', getUnitName( $unit_names, $sensor['unitId'] ) );
 		$sensor_uuid = SensorManager::create_sensor( getParameterName( $parameter_names, $sensor_name ), '', $sensor_type_uuid, $location_uuids[$location['id']] );
@@ -100,6 +105,8 @@ foreach ($locations as $location) {
 
 		SensorManager::create_multiple_sensor_reading( $sensor_uuid, $data_array );
 	}
+
+	$location_index += 1;
 }
 
 ?>

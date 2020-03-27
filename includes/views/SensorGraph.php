@@ -76,6 +76,8 @@
 			dateAxis.groupData = true;
 			dateAxis.groupCount = 500;
 
+			dateAxis.tooltipDateFormat = "yyyy-MM-dd\nhh:mm:ss";
+
 			var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
 
 			// Create series

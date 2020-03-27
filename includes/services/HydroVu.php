@@ -19,10 +19,28 @@ class HydroVu {
 	}
 
 	public function get_locations() {
-		return $this->cURL->http_get( 'https://www.hydrovu.com/public-api/v1/locations/list', $this->authorization )['data'];
+		$response = $this->cURL->http_get( 'https://www.hydrovu.com/public-api/v1/locations/list', $this->authorization );
+
+		$response_next_page = $response[ 'header' ][ 'X-ISI-Next-Page' ];
+
+		$response_data = $response[ 'data' ];
+
+		while ( true ) {
+			$response = $this->cURL->http_get( 'https://www.hydrovu.com/public-api/v1/locations/list', $this->authorization, array( 'X-ISI-Start-Page: ' . $response_next_page ) );
+
+			$response_data = array_merge( $response_data, $response[ 'data' ] );
+
+			if ( array_key_exists( 'X-ISI-Next-Page', $response[ 'header' ] ) ) {
+				$response_next_page = $response[ 'header' ][ 'X-ISI-Next-Page' ];
+			} else {
+				break;
+			}
+		}
+
+		return $response_data;
 	}
 
-	public function get_readings( $location_id,  $location_name ) {
+	public function get_readings( $location_id,  $location_name, $location_index, $location_total ) {
 		//Paging is handled through the use of HTTP headers. Responses will have a header X-ISI-Next-Page and a header X-ISI-Prev-Page that can be inserted into a request header X-ISI-Start-Page to fetch the next or previous page respectively. If no start page is provided, the first page will be used. If the response does not have a next or previous page, the headers are not provided.
 
 		//If the data covers multiple pages, the following pages can be retrieved by putting the X-ISI-Next-Page response header value into an X-ISI-Start-Page request header.
@@ -47,7 +65,7 @@ class HydroVu {
 		$previous_timestamp = $readings[$value['parameterId']]['readings'][0]['timestamp'];
 
 		while ( true ) {
-			echo 'Retrieving page ' . ( $counter + 1 ) . ' of readings beggining ' . gmdate( 'Y-m-d H:i:s', $previous_timestamp ) . ' for location ' . $location_name;
+			echo 'Retrieving page ' . ( $counter + 1 ) . ' of readings beggining ' . gmdate( 'Y-m-d H:i:s', $previous_timestamp ) . ' for location ' . $location_name . ' (' . ( $location_index + 1 ) . ' of ' . $location_total . ')';
 
 			$page_response = $this->get_readings_page( $location_id, $response_next_page );
 
