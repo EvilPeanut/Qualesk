@@ -94,12 +94,16 @@ $graph_url = "https://" . $_SERVER['SERVER_NAME'] . "/graph/" . substr( $_GET[ '
 		</div>
 		<!-- Settings prompt -->
 
-		<div class="grid-item grid-item-3x1"><div>
+		<div class="grid-item grid-item-2x1"><div>
 			<h1 style="display: inline"><? echo $sensor['name']; ?> Graph</h1>
 			<img style="display: inline; float: right; cursor: pointer" src="../static/img/icon_settings.png" onclick="$( '#div_overlay_settings' ).show()" />
 			<img style="display: inline; float: right; cursor: pointer; margin-right: 8px" src="../static/img/icon_share.png" onclick="$( '#div_overlay_share' ).show()" />
 
 			<iframe src="../graph/<? echo substr( $_GET[ 'url' ], strrpos( $_GET[ 'url' ], '/' ) + 1 ); ?>" style="width: 100%; height: 520px; border: 0; margin-top: 8px"></iframe>
+		</div></div>
+
+		<div class="grid-item grid-item-1x1"><div>
+			<iframe src="../includes/views/candlestickgraph.php?url=<? echo substr( $_GET[ 'url' ], strrpos( $_GET[ 'url' ], '/' ) + 1 ); ?>" style="width: 100%; height: 562px; border: 0"></iframe>
 		</div></div>
 
 		<div class="grid-item"><div>
