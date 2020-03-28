@@ -132,7 +132,7 @@ class GraphManager
 		}
 	}
 
-	public static function print_graph_list( $allow_management = false, $sensor_array_uuid = NULL ) {
+	public static function get_graph_list( $sensor_array_uuid = NULL ) {
 		require( 'services/DatabaseConnect.php' );
 
 		$where_clause = "";
@@ -141,24 +141,46 @@ class GraphManager
 			$where_clause = " WHERE sensor_array_uuid='$sensor_array_uuid'";
 		}
 
+		$graphs = [];
+
 		if ( $statement = $mysqli->prepare( "SELECT uuid, name, description, sensor_array_uuid FROM graphs $where_clause ORDER BY sensor_array_uuid;" ) ) {
 			$statement->execute();
 			$statement->store_result();
 			$statement->bind_result( $uuid, $name, $description, $sensor_array_uuid );
 			
 			while ( $statement->fetch() ) {
-				if ( $allow_management ) {
-					if ( strlen( $description ) > 0 ) {
-						echo "<img src='../static/img/remove.png' style='cursor: pointer' onclick='show_prompt(\"Remove compound graph\", \"Are you sure you want to remove this compound graph?\", \"../includes/services/graphRemove.php?uuid=$uuid\")'><a href='../collective/$uuid'><p style='display: inline-block; margin: 0px 0px 8px 8px'> $name <span style='color: grey'> - $description</span></p></a><br>";
-					} else {
-						echo "<img src='../static/img/remove.png' style='cursor: pointer' onclick='show_prompt(\"Remove compound graph\", \"Are you sure you want to remove this compound graph?\", \"../includes/services/graphRemove.php?uuid=$uuid\")'><a href='../collective/$uuid'><p style='display: inline-block; margin: 0px 0px 8px 8px'> $name</p></a><br>";
-					}
+				array_push( $graphs, array(
+					"uuid" => $uuid,
+					"name" => $name,
+					"description" => $description,
+					"sensor_array_uuid" => $sensor_array_uuid
+				) );
+			}
+		}
+
+		return $graphs;
+	}
+
+	public static function print_graph_list( $allow_management = false, $sensor_array_uuid = NULL ) {
+		$graphs = GraphManager::get_graph_list( $sensor_array_uuid );
+
+		foreach ( $graphs as $graph ) {
+			$uuid = $graph[ "uuid" ];
+			$name = $graph[ "name" ];
+			$description = $graph[ "description" ];
+			$sensor_array_uuid = $graph[ "sensor_array_uuid" ];
+
+			if ( $allow_management ) {
+				if ( strlen( $description ) > 0 ) {
+					echo "<img src='../static/img/remove.png' style='cursor: pointer' onclick='show_prompt(\"Remove compound graph\", \"Are you sure you want to remove this compound graph?\", \"../includes/services/graphRemove.php?uuid=$uuid\")'><a href='../collective/$uuid'><p style='display: inline-block; margin: 0px 0px 8px 8px'> $name <span style='color: grey'> - $description</span></p></a><br>";
 				} else {
-					if ( strlen( $description ) > 0 ) {
-						echo "<a href='../collective/$uuid'><p>$name <span style='color: grey'> - $description</span></p></a><br>";
-					} else {
-						echo "<a href='../collective/$uuid'><p>$name</p></a><br>";
-					}
+					echo "<img src='../static/img/remove.png' style='cursor: pointer' onclick='show_prompt(\"Remove compound graph\", \"Are you sure you want to remove this compound graph?\", \"../includes/services/graphRemove.php?uuid=$uuid\")'><a href='../collective/$uuid'><p style='display: inline-block; margin: 0px 0px 8px 8px'> $name</p></a><br>";
+				}
+			} else {
+				if ( strlen( $description ) > 0 ) {
+					echo "<a href='../collective/$uuid'><p>$name <span style='color: grey'> - $description</span></p></a><br>";
+				} else {
+					echo "<a href='../collective/$uuid'><p>$name</p></a><br>";
 				}
 			}
 		}

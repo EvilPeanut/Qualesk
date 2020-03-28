@@ -76,6 +76,7 @@ class SensorArrayManager
 
 			while ( $statement->fetch() ) {
 				$sensor_arrays[ $uuid ] = array();
+				$sensor_arrays[ $uuid ][ 'uuid' ] = $uuid;
 				$sensor_arrays[ $uuid ][ 'system_uuid' ] = $system_uuid;
 				$sensor_arrays[ $uuid ][ 'name' ] = $name;
 				$sensor_arrays[ $uuid ][ 'description' ] = $description;
@@ -99,6 +100,7 @@ class SensorArrayManager
 			$statement->fetch();
 
 			$sensor_array = array();
+			$sensor_array[ 'uuid' ] = $uuid;
 			$sensor_array[ 'system_uuid' ] = $system_uuid;
 			$sensor_array[ 'name' ] = $name;
 			$sensor_array[ 'description' ] = $description;

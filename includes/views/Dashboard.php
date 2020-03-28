@@ -25,13 +25,15 @@
 			});
 		}
 
-		function addGraph( name, uuid ) {
-			$( "#div_add" ).before( "<div id='element" + elementCount + "' class='grid-item grid-item-1x1'><div><h1 style='display: inline'>" + name + " Graph</h1><img class='icon' src='../static/img/icon_close.png' onclick='removeElement(" + elementCount + ")'/><iframe src='../graph/" + uuid + "' style='width: 100%; height: 520px; border: 0; margin-top: 8px'></iframe></div></div>" );
+		function addGraph( name, uuid, type = "Graph" ) {
+			let iframe_source = type == "Graph" ? "../graph/" + uuid : "../compound/" + uuid;
+
+			$( "#div_add" ).before( "<div id='element" + elementCount + "' class='grid-item grid-item-1x1'><div><h1 style='display: inline'>" + name + " Graph</h1><img class='icon' src='../static/img/icon_close.png' onclick='removeElement(" + elementCount + ")'/><iframe src='" + iframe_source + "' style='width: 100%; height: 520px; border: 0; margin-top: 8px'></iframe></div></div>" );
 
 			$.ajax({
 				method: "POST",
 				url: "../includes/services/ajaxDashboardAdd.php",
-				data: { dashboard_uuid: "<? echo $dashboard_uuid; ?>", element_type: "Graph", element_uuid: uuid }
+				data: { dashboard_uuid: "<? echo $dashboard_uuid; ?>", element_type: type, element_uuid: uuid }
 			}).done(function( msg ) {
 				$( "body" ).append( msg );
 			});
@@ -60,9 +62,18 @@
 
 		if ( is_array( $dashboard[ 'data' ] ) && count( $dashboard[ 'data' ] ) != 0 ) {
 			foreach ( $dashboard[ 'data' ] as $key => $element ) {
+				$source_url = "";
+				$title = "";
+
 				if ( $element->type == "Graph" ) {
-					echo "<div id='element" . $key . "' class='grid-item grid-item-1x1'><div><h1 style='display: inline'>" . SensorManager::get_sensor( $element->uuid )[ 'name' ] . " Graph</h1><img class='icon' src='../static/img/icon_close.png' onclick='removeElement(" . $key . ", \"" . $element->uuid . "\")'/><iframe src='../graph/" . $element->uuid . "' style='width: 100%; height: 520px; border: 0; margin-top: 8px'></iframe></div></div>";
+					$source_url = "../graph/" . $element->uuid;
+					$title = SensorManager::get_sensor( $element->uuid )[ 'name' ];
+				} else if ( $element->type == "CompoundGraph" ) {
+					$source_url = "../compound/" . $element->uuid;
+					$title = GraphManager::get_graph( $element->uuid )[ 'name' ];
 				}
+
+				echo "<div id='element" . $key . "' class='grid-item grid-item-1x1'><div><h1 style='display: inline'>" . $title . " Graph</h1><img class='icon' src='../static/img/icon_close.png' onclick='removeElement(" . $key . ", \"" . $element->uuid . "\")'/><iframe src='" . $source_url . "' style='width: 100%; height: 520px; border: 0; margin-top: 8px'></iframe></div></div>";
 			}
 		}
 
@@ -73,25 +84,47 @@
 			<div id="div_add_items" style="display: none">
 				<h1 style='display: inline'>Sensor Graphs</h1>
 				<img class='icon' src='../static/img/icon_close.png' onclick="hideAddElements()"/>
-				<div style="margin-top: 16px; max-height: 512px; overflow-y: auto">
+				<div style="margin-top: 16px; max-height: 484px; overflow-y: auto">
 				<?
+
+				function compound_graph_list( $sensor_array_uuid ) {					
+					$compound_graphs = GraphManager::get_graph_list( $sensor_array_uuid );
+
+					foreach ( $compound_graphs as $compound_graph ) {
+						echo "<a><p style='margin-left: 16px; margin-bottom: 4px' onclick='addGraph(\"" . $compound_graph[ 'name' ] . "\", \"" . $compound_graph[ 'uuid' ] . "\", \"CompoundGraph\")'><img src='../static/img/icon_compound_graph.png'> " . $compound_graph[ 'name' ] . "</p></a>";
+					}
+				}
 
 				$sensor_list = SensorManager::get_sensor_list();
 
-				$previous_sensor_array_name = null;
+				$previous_sensor_array_uuid = null;
 
 				foreach ( $sensor_list as $sensor_uuid => $sensor ) {
-					if ($previous_sensor_array_name != $sensor[ 'sensor_array' ][ 'name' ]) {
-						echo "<p style='margin-bottom: 4px;" . ( is_null( $previous_sensor_array_name ) ? "" : "margin-top: 16px" ) . "'>" . $sensor[ 'sensor_array' ][ 'name' ] . "</p>";
+					if ( $previous_sensor_array_uuid != $sensor[ 'sensor_array' ][ 'uuid' ] ) {
+						// Compound graphs
+						if ( $previous_sensor_array_uuid != null ) {
+							compound_graph_list( $previous_sensor_array_uuid );
+						}
 
-						$previous_sensor_array_name = $sensor[ 'sensor_array' ][ 'name' ];
+						// Sensor array title
+						echo "<p style='margin-bottom: 4px;" . ( is_null( $previous_sensor_array_uuid ) ? "" : "margin-top: 16px" ) . "'>" . $sensor[ 'sensor_array' ][ 'name' ] . "</p>";
+
+						$previous_sensor_array_uuid = $sensor[ 'sensor_array' ][ 'uuid' ];
 					}
 
-					echo "<a><p style='margin-left: 16px; margin-bottom: 4px' onclick='addGraph(\"" . $sensor[ 'name' ] . "\", \"" . $sensor_uuid . "\")'><span style='color: #7bbdff'>&#8627;</span> " . $sensor[ 'name' ] . "</p></a>";
+					echo "<a><p style='margin-left: 16px; margin-bottom: 4px' onclick='addGraph(\"" . $sensor[ 'name' ] . "\", \"" . $sensor_uuid . "\")'><img src='../static/img/icon_graph.png'> " . $sensor[ 'name' ] . "</p></a>";
+				}
+
+				if ( $previous_sensor_array_uuid != null ) {
+					compound_graph_list( $previous_sensor_array_uuid );
 				}
 
 				?>
 				</div>
+
+				<br>
+
+				<p><img src="../static/img/icon_graph.png"> Graph<img src="../static/img/icon_compound_graph.png" style="margin-left: 16px"> Compound Graph</p>
 			</div>
 		</div></div>
 		
