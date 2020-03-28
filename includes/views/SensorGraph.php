@@ -27,12 +27,7 @@
 <!DOCTYPE html>
 <html style="height: 100%">
 	<head>
-		<style>
-		p, h1, tspan {
-			margin: 0;
-			font-family: sans-serif;
-		}
-		</style>
+		<link rel="stylesheet" type="text/css" href="../static/css/main.css">
 
 		<script src="https://www.amcharts.com/lib/4/core.js"></script>
 		<script src="https://www.amcharts.com/lib/4/charts.js"></script>
@@ -266,7 +261,7 @@
 			} );
 		</script>
 	</head>
-	<body style="height: 100%; margin: 0px; overflow: hidden">
-		<div id="chartdiv" style="height: 100%"></div>
+	<body class="iframe-graph-body">
+		<div id="chartdiv"></div>
 	</body>
 </html>

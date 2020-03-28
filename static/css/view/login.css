@@ -1,0 +1,9 @@
+#text_nologin {
+	margin-bottom: 16px;
+	background-color: #ff6961;
+	color: white;
+	width: fit-content;
+	padding: 8px 16px;
+	border-radius: 4px;
+	display: none;
+}

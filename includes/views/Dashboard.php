@@ -26,7 +26,7 @@
 		}
 
 		function addGraph( name, uuid ) {
-			$( "#div_add" ).before( "<div id='element" + elementCount + "' class='grid-item grid-item-1x1'><div><h1 style='display: inline'>" + name + " Graph</h1><img style='display: inline; float: right; cursor: pointer' src='../static/img/icon_close.png' onclick='removeElement(" + elementCount + ")'/><iframe src='../graph/" + uuid + "' style='width: 100%; height: 520px; border: 0; margin-top: 8px'></iframe></div></div>" );
+			$( "#div_add" ).before( "<div id='element" + elementCount + "' class='grid-item grid-item-1x1'><div><h1 style='display: inline'>" + name + " Graph</h1><img class='icon' src='../static/img/icon_close.png' onclick='removeElement(" + elementCount + ")'/><iframe src='../graph/" + uuid + "' style='width: 100%; height: 520px; border: 0; margin-top: 8px'></iframe></div></div>" );
 
 			$.ajax({
 				method: "POST",
@@ -61,7 +61,7 @@
 		if ( is_array( $dashboard[ 'data' ] ) && count( $dashboard[ 'data' ] ) != 0 ) {
 			foreach ( $dashboard[ 'data' ] as $key => $element ) {
 				if ( $element->type == "Graph" ) {
-					echo "<div id='element" . $key . "' class='grid-item grid-item-1x1'><div><h1 style='display: inline'>" . SensorManager::get_sensor( $element->uuid )[ 'name' ] . " Graph</h1><img style='display: inline; float: right; cursor: pointer' src='../static/img/icon_close.png' onclick='removeElement(" . $key . ", \"" . $element->uuid . "\")'/><iframe src='../graph/" . $element->uuid . "' style='width: 100%; height: 520px; border: 0; margin-top: 8px'></iframe></div></div>";
+					echo "<div id='element" . $key . "' class='grid-item grid-item-1x1'><div><h1 style='display: inline'>" . SensorManager::get_sensor( $element->uuid )[ 'name' ] . " Graph</h1><img class='icon' src='../static/img/icon_close.png' onclick='removeElement(" . $key . ", \"" . $element->uuid . "\")'/><iframe src='../graph/" . $element->uuid . "' style='width: 100%; height: 520px; border: 0; margin-top: 8px'></iframe></div></div>";
 				}
 			}
 		}
@@ -72,7 +72,7 @@
 			<img id="icon_add" src="../static/img/tile_add_graph.png" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); cursor: pointer" onclick="showAddElements()"/>
 			<div id="div_add_items" style="display: none">
 				<h1 style='display: inline'>Sensor Graphs</h1>
-				<img style='display: inline; float: right; cursor: pointer' src='../static/img/icon_close.png' onclick="hideAddElements()"/>
+				<img class='icon' src='../static/img/icon_close.png' onclick="hideAddElements()"/>
 				<div style="margin-top: 16px; max-height: 512px; overflow-y: auto">
 				<?
 

@@ -1,9 +1,5 @@
 <?
 
-if ( !AccountManager::has_permission( 'admin_features' ) ) {
-	header('Location: ../noperm');
-}
-
 $system_center = SystemManager::get_system_center();
 
 ?>
@@ -45,7 +41,7 @@ $system_center = SystemManager::get_system_center();
 		<? include 'elements/prompt.php'; ?>
 
 		<div class="grid-item"><div>
-			<h1>Sensor Arrays <span style="color: grey; font-size: small"><? echo SensorArrayManager::get_count(); ?> Total</span></h1>
+			<h1>Sensor Arrays <span class="sml-grey"><? echo SensorArrayManager::get_count(); ?> Total</span></h1>
 			<? SensorArrayManager::print_sensor_array_list( true ); ?>
 		</div></div>
 
@@ -55,7 +51,7 @@ $system_center = SystemManager::get_system_center();
 				<div style="display: inline-block"><p>System</p><? SystemManager::create_system_dropdown(); ?><br><br></div>
 				<div style="display: inline-block; margin-left: 16px"><p>Name</p><input type="text" name="name"><br><br></div>
 				<div><p>Description</p><input type="text" name="description"><br><br></div>
-				<div id="map" style="height: 512px"></div>
+				<div id="map"></div>
 				<input type="text" name="latitude" hidden>
 				<input type="text" name="longitude" hidden><br>
 				<input type="submit" value="Create Sensor Array">

@@ -1,10 +1,3 @@
-<?
-
-if ( !AccountManager::has_permission( 'admin_features' ) ) {
-	header('Location: ../noperm');
-}
-
-?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -19,7 +12,7 @@ if ( !AccountManager::has_permission( 'admin_features' ) ) {
 		<? include 'elements/prompt.php'; ?>
 
 		<div class="grid-item"><div>
-			<h1>Systems <span style="color: grey; font-size: small"><? echo SystemManager::get_count(); ?> Total</span></h1>
+			<h1>Systems <span class="sml-grey"><? echo SystemManager::get_count(); ?> Total</span></h1>
 			<? SystemManager::print_system_list( true ); ?>
 		</div></div>
 

@@ -15,7 +15,7 @@ Route::set( '/^$/' , function() {
 		}
 	} else {
 		Installation::CreateView( 'Installation' );
-		return;
+		exit;
 	}
 });
 
@@ -77,7 +77,7 @@ if ( AccountManager::is_logged_in() ) {
 	});
 
 	Route::set( '/^noperm$/' , function() {
-		Generic::CreateView( 'NoPermissionNotice' );
+		Generic::CreateView( 'PermissionDenied' );
 	});
 } else {
 	Login::CreateView( 'Login' );

@@ -1,9 +1,5 @@
 <?
 
-if ( !AccountManager::has_permission( 'admin_features' ) ) {
-	header('Location: ../noperm');
-}
-
 move_uploaded_file( $_FILES[ "CSVfile" ][ "tmp_name" ], sys_get_temp_dir() . $_FILES[ "CSVfile" ][ "name" ] );
 
 ?>
@@ -61,12 +57,12 @@ move_uploaded_file( $_FILES[ "CSVfile" ][ "tmp_name" ], sys_get_temp_dir() . $_F
 			<h1>Import Sensor Array Sensors</h1>
 
 			<p>Sensor Array Creation</p>
-			<progress value="0" id="sensor_create_pb" style="width: 100%"></progress>
+			<progress value="0" id="sensor_create_pb"></progress>
 
 			<br><br>
 
 			<p>Data Point Creation</p>
-			<progress value="0" id="data_create_pb" style="width: 100%"></progress>
+			<progress value="0" id="data_create_pb"></progress>
 		</div></div>
 
 		<? include 'elements/bottomBar.php'; ?>

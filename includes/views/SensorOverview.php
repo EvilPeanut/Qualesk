@@ -29,8 +29,8 @@ $graph_url = "https://" . $_SERVER['SERVER_NAME'] . "/graph/" . substr( $_GET[ '
 		<? include 'elements/topBar.php'; ?>
 
 		<!-- Share prompt -->
-		<div id="div_overlay_share" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; background-color: rgba(0, 0, 0, 0.6); display: none">
-			<div id="div_prompt" style="display: block; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 32px; background-color: white; border-radius: 16px;">
+		<div id="div_overlay_share" class="overlay">
+			<div id="div_prompt">
 				<h1>Share <? echo $sensor['name']; ?> Graph</h1>
 				<?
 
@@ -51,8 +51,8 @@ $graph_url = "https://" . $_SERVER['SERVER_NAME'] . "/graph/" . substr( $_GET[ '
 		<!-- Share prompt -->
 
 		<!-- Settings prompt -->
-		<div id="div_overlay_settings" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; background-color: rgba(0, 0, 0, 0.6); display: none">
-			<div id="div_prompt" style="display: block; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 32px; background-color: white; border-radius: 16px;">
+		<div id="div_overlay_settings" class="overlay">
+			<div id="div_prompt">
 				<h1><? echo $sensor['name']; ?> Graph Settings</h1>
 				<p>Publicly Visible</p>
 				<input id="chk_permission_public_graph" type="checkbox" <? echo $sensor[ 'permission_public_graph' ] ? 'checked' : ''; ?>><p style="display: inline">Allow</p></input>
@@ -95,9 +95,10 @@ $graph_url = "https://" . $_SERVER['SERVER_NAME'] . "/graph/" . substr( $_GET[ '
 		<!-- Settings prompt -->
 
 		<div class="grid-item grid-item-3x1"><div>
-			<h1 style="display: inline"><? echo $sensor['name']; ?> Graph</h1>
-			<img style="display: inline; float: right; cursor: pointer" src="../static/img/icon_settings.png" onclick="$( '#div_overlay_settings' ).show()" />
-			<img style="display: inline; float: right; cursor: pointer; margin-right: 8px" src="../static/img/icon_share.png" onclick="$( '#div_overlay_share' ).show()" />
+			<h1 class="graph-title"><? echo $sensor['name']; ?> Graph</h1>
+			
+			<img class="icon" src="../static/img/icon_settings.png" onclick="$( '#div_overlay_settings' ).show()" />
+			<img class="icon" src="../static/img/icon_share.png" onclick="$( '#div_overlay_share' ).show()" />
 
 			<iframe src="../graph/<? echo substr( $_GET[ 'url' ], strrpos( $_GET[ 'url' ], '/' ) + 1 ); ?>" style="width: 100%; height: 520px; border: 0; margin-top: 8px"></iframe>
 		</div></div>
@@ -112,7 +113,7 @@ $graph_url = "https://" . $_SERVER['SERVER_NAME'] . "/graph/" . substr( $_GET[ '
 					$( "#reading_total" ).text( $( "#sensor_readings > p" ).length + " Total" );
 				} );
 			</script>
-			<h1><? echo $sensor[ 'name' ]; ?> Readings <span id="reading_total" style="color: grey; font-size: small"><? echo count( $sensor_readings ); ?> Total</span></h1>
+			<h1><? echo $sensor[ 'name' ]; ?> Readings <span id="reading_total" class="sml-grey"><? echo count( $sensor_readings ); ?> Total</span></h1>
 			<div id="sensor_readings" style="height: 320px; overflow-y: auto">
 				<?
 

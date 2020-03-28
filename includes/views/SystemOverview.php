@@ -20,7 +20,7 @@
 		<div class="grid-item"><div>
 			<h1>Map</h1>
 
-			<div id="map" style="height: 512px"></div>
+			<div id="map"></div>
 
 			<script>
 				var map;
@@ -73,7 +73,7 @@
 		</div></div>
 
 		<div class="grid-item"><div>
-			<h1>Sensor Arrays  <span style="color: grey; font-size: small"><? echo SensorArrayManager::get_count( $system_uuid ); ?> Total</span></h1>
+			<h1>Sensor Arrays  <span class="sml-grey"><? echo SensorArrayManager::get_count( $system_uuid ); ?> Total</span></h1>
 			<? SensorArrayManager::print_sensor_array_list( false, $system_uuid ); ?>
 		</div></div>
 

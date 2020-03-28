@@ -3,7 +3,9 @@
 class Admin extends Controller {
 
 	public static function Init() {
-
+		if ( !AccountManager::has_permission( 'admin_features' ) ) {
+			header('Location: ../noperm');
+		}
 	}
 
 	public static function get_count() {
