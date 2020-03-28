@@ -78,8 +78,16 @@
 
 				$sensor_list = SensorManager::get_sensor_list();
 
+				$previous_sensor_array_name = null;
+
 				foreach ( $sensor_list as $sensor_uuid => $sensor ) {
-					echo "<p style='cursor: pointer; background-color: #48a4ff; color: white; padding: 8px 8px; border-bottom: 1px solid white' onclick='addGraph(\"" . $sensor[ 'name' ] . "\", \"" . $sensor_uuid . "\")'>" . $sensor[ 'sensor_array' ][ 'name' ] . " - " . $sensor[ 'name' ] . "</p>";
+					if ($previous_sensor_array_name != $sensor[ 'sensor_array' ][ 'name' ]) {
+						echo "<p style='margin-bottom: 4px;" . ( is_null( $previous_sensor_array_name ) ? "" : "margin-top: 16px" ) . "'>" . $sensor[ 'sensor_array' ][ 'name' ] . "</p>";
+
+						$previous_sensor_array_name = $sensor[ 'sensor_array' ][ 'name' ];
+					}
+
+					echo "<a><p style='margin-left: 16px; margin-bottom: 4px' onclick='addGraph(\"" . $sensor[ 'name' ] . "\", \"" . $sensor_uuid . "\")'><span style='color: #7bbdff'>&#8627;</span> " . $sensor[ 'name' ] . "</p></a>";
 				}
 
 				?>
