@@ -33,7 +33,7 @@ function is_sensor_on_graph( $graph, $uuid ) {
 	</style>
 	<script>
 		$( document ).ready( function() {
-			$( 'input[type="checkbox"]' ).change( function() {
+			$( '.grid-item input[type="checkbox"]' ).change( function() {
 				let graph_uuid = '<? echo $compound_graph_uuid ?>';
 
 				if ( this.checked ) {
@@ -53,7 +53,13 @@ function is_sensor_on_graph( $graph, $uuid ) {
 		<div id="div_overlay_share" class="overlay">
 			<div id="div_prompt">
 				<h1>Share <? echo $graph['name']; ?> Graph</h1>
+				<?
 
+				if ( !$graph[ 'permission_public_graph' ] ) {
+					echo "<p style='color: #ff4000'>Users must be logged in to view this graph</p><br>";
+				}
+
+				?>
 				<p>Link</p>
 				<a href="<? echo $graph_url; ?>"><p><? echo $graph_url; ?></p></a>
 				<br>
@@ -72,15 +78,14 @@ function is_sensor_on_graph( $graph, $uuid ) {
 				<h1><? echo $graph['name']; ?> Graph Settings</h1>
 				<p>Publicly Visible</p>
 				<input id="chk_permission_public_graph" type="checkbox" <? echo $graph[ 'permission_public_graph' ] ? 'checked' : ''; ?>><p style="display: inline">Allow</p></input>		
-				<br>
+				<br><br>
 				<script>
 					function setGraphSettings() {
 						$.ajax({
 							method: "POST",
-							url: "../includes/services/sensorGraphSettingsSet.php",
+							url: "../includes/services/compoundGraphSettingsSet.php",
 							data: { 
-								sensor_uuid: "<? echo $sensor_uuid ?>",
-								default_colour: $( "#input_default_colour" ).val(),
+								compound_graph_uuid: "<? echo $compound_graph_uuid ?>",
 								permission_public_graph: $( "#chk_permission_public_graph" ).prop( "checked" ) ? 1 : 0
 							}
 						}).done( () => {
@@ -98,6 +103,9 @@ function is_sensor_on_graph( $graph, $uuid ) {
 
 		<div class="grid-item grid-item-3x1"><div>
 			<h1 class="graph-title"><? echo $graph['name']; ?> Graph</h1>
+
+			<img class="icon" src="../static/img/icon_settings.png" onclick="$( '#div_overlay_settings' ).show()" />
+			<img class="icon" src="../static/img/icon_share.png" onclick="$( '#div_overlay_share' ).show()" />
 
 			<div>
 				<div style="width: 80%; float: left">

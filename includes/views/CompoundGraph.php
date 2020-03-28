@@ -8,7 +8,14 @@
 	$graph = GraphManager::get_graph( $compound_graph_uuid );
 	$graph_sensors = GraphManager::get_graph_readings( $graph );
 
+	$permission_public_graph = $graph[ 'permission_public_graph' ];
+
 	$is_logged_in = AccountManager::is_logged_in();
+
+	if ( !$permission_public_graph && !$is_logged_in ) {
+		echo '<p>This graph is not visible to the public</p>';
+		exit();
+	}
 
 ?>
 <!DOCTYPE html>

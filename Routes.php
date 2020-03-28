@@ -19,6 +19,16 @@ Route::set( '/^$/' , function() {
 	}
 });
 
+Route::set( '/(compound\/.*)/' , function() {
+	Generic::CreateView( 'CompoundGraph' );
+	exit;
+});
+
+Route::set( '/(graph\/.*)/' , function() {
+	Generic::CreateView( 'SensorGraph' );
+	exit;
+});
+
 if ( AccountManager::is_logged_in() ) {
 	Route::set( '/^admin\/modules$/' , function() {
 		Admin::CreateView( 'Modules' );
@@ -62,14 +72,6 @@ if ( AccountManager::is_logged_in() ) {
 
 	Route::set( '/(sensor\/.*)/' , function() {
 		Generic::CreateView( 'SensorOverview' );
-	});
-
-	Route::set( '/(compound\/.*)/' , function() {
-		Generic::CreateView( 'CompoundGraph' );
-	});
-
-	Route::set( '/(graph\/.*)/' , function() {
-		Generic::CreateView( 'SensorGraph' );
 	});
 
 	Route::set( '/(dashboard\/.*)/' , function() {

@@ -28,11 +28,11 @@ class GraphManager
 	public static function get_graph( $graph_uuid ) {
 		require( 'services/DatabaseConnect.php' );
 
-		if ( $statement = $mysqli->prepare( "SELECT sensor_array_uuid, name, description, sensors FROM graphs WHERE uuid=?;" ) ) {
+		if ( $statement = $mysqli->prepare( "SELECT sensor_array_uuid, name, description, sensors, permission_public_graph FROM graphs WHERE uuid=?;" ) ) {
 			$statement->bind_param( 's', $graph_uuid );
 			$statement->execute();
 			$statement->store_result();
-			$statement->bind_result( $sensor_array_uuid, $name, $description, $sensors_json );
+			$statement->bind_result( $sensor_array_uuid, $name, $description, $sensors_json, $permission_public_graph );
 			
 			$statement->fetch();
 
@@ -42,6 +42,7 @@ class GraphManager
 			$graph[ 'name' ] = $name;
 			$graph[ 'description' ] = $description;
 			$graph[ 'sensors' ] = json_decode( $sensors_json, true );
+			$graph[ 'permission_public_graph' ] = $permission_public_graph;
 
 			return $graph;
 		}
