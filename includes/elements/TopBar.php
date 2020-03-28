@@ -3,7 +3,7 @@
 
 	<p style="position: absolute; left: calc(2vw + 188px); bottom: 10px; color: antiquewhite"><? echo Config::get('project_name'); ?></p>
 
-	<a href="../includes/services/userLogout.php">
+	<a href="../includes/services/userLogout.php" <? echo AccountManager::is_logged_in() ? '' : 'hidden' ?>>
 		<div style="position: absolute; bottom: 0px; right: 1vw; background-color: rgba(255, 255, 255, 0.15); padding: 8px 16px; border-radius: 4px 4px 0px 0px"><p style="color: white">Log Out</p></div>
 	</a>
 </div>
