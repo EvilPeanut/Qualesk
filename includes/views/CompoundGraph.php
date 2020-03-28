@@ -81,14 +81,10 @@
 
 				series.dataFields.valueY = "value" + index;
 				series.dataFields.dateX = "date" + index;
+
 				series.tooltip.getFillFromObject = false;
 				series.tooltip.background.fill = series.stroke;
-				series.tooltip.label.interactionsEnabled = true;
-
-				series.tooltipHTML = "<p style=\'margin-top: 4px\'>{value" + index + "} " + unit + "</p>";
-
-				series.strokeWidth = 2;
-				series.minBulletDistance = 15;
+				series.tooltipText = "{value" + index + "} " + unit;
 
 				// Drop-shaped tooltips
 				series.tooltip.background.cornerRadius = 20;
@@ -99,6 +95,9 @@
 				series.tooltip.label.textAlign = "middle";
 				series.tooltip.label.textValign = "middle";
 
+				series.strokeWidth = 2;
+				series.minBulletDistance = 15;
+
 				// Make bullets grow on hover
 				var bullet = series.bullets.push(new am4charts.CircleBullet());
 				bullet.circle.strokeWidth = 2;
@@ -107,12 +106,6 @@
 
 				var bullethover = bullet.states.create("hover");
 				bullethover.properties.scale = 2;
-
-				// Make a panning cursor
-				chart.cursor = new am4charts.XYCursor();
-				chart.cursor.behavior = "panXY";
-				chart.cursor.xAxis = dateAxis;
-				chart.cursor.snapToSeries = series;
 
 				// y-Axis Options
 				valueAxis.renderer.line.strokeOpacity = 1;
@@ -123,6 +116,12 @@
 				// Add to date slider
 				chart.scrollbarX.series.push(series);
 			}
+
+			// Make a panning cursor
+			chart.cursor = new am4charts.XYCursor();
+			chart.cursor.behavior = "panXY";
+			chart.cursor.xAxis = dateAxis;
+			chart.cursor.snapToSeries = window.series;
 
 			<?
 
