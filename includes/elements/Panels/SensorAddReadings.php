@@ -1,5 +1,5 @@
 <div class="grid-item"><div>
-	<h1>Import Sensor Reading</h1>
+	<h1>Import Sensor Readings</h1>
 	<form action="../includes/services/sensorReadingImport.php" method="post" enctype="multipart/form-data">
 		<input type="file" name="CSVfile" id="CSVfile">
 		<br><br>
