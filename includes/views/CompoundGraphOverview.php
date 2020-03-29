@@ -24,7 +24,6 @@ function is_sensor_on_graph( $graph, $uuid ) {
 	<link rel="stylesheet" type="text/css" href="../static/css/main.css">
 	<link rel="icon" type="image/x-icon" href="../static/img/favicon.png" />
 	<script src="../static/js/jquery-3.4.0.min.js"></script>
-	<? include 'services/websocketHandler.php'; ?>
 	<style>
 		#chartdiv {
 		  width: 100%;

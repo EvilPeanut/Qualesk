@@ -82,8 +82,11 @@ class GraphManager
 	public static function get_graph_readings( $graph ) {
 		$sensor_readings = array();
 
-		foreach ( $graph['sensors'] as $sensor ) {
-			array_push( $sensor_readings, SensorManager::get_sensor_readings( $sensor ) );
+		foreach ( $graph[ 'sensors' ] as $sensor ) {
+			array_push(
+				$sensor_readings,
+				array( 'uuid' => $sensor, 'readings' => SensorManager::get_sensor_readings( $sensor ) )
+			);
 		}
 
 		return $sensor_readings;

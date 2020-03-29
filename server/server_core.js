@@ -164,14 +164,13 @@ function broadcast_sensor_reading( sensor_uuid, reading_uuid, date, data ) {
 	for ( var user_uuid in core.user_connections ) {
 		var user = core.user_connections[ user_uuid ];
 
-		if ( user.definition.current_view === 'sensor' && user.definition.current_view_uuid === sensor_uuid ) {
-			user.connection.sendUTF( JSON.stringify( {
-				type: 'sensor_reading',
-				reading_uuid: reading_uuid,
-				date: date,
-				data: data
-			} ) );
-		}
+		user.connection.sendUTF( JSON.stringify( {
+			type: 'sensor_reading',
+			sensor_uuid: sensor_uuid,
+			reading_uuid: reading_uuid,
+			date: date,
+			data: data
+		} ) );
 	}
 }
 

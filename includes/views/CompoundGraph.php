@@ -43,14 +43,12 @@
 			chart.data = [
 			<?
 
-			$graph_index = 0;
-
 			foreach ( $graph_sensors as $sensor ) {
-				foreach ( $sensor as $uuid => $sensor_reading ) {
-					echo "{ date" . $graph_index . ": new Date( Date.parse( '" . $sensor_reading[ 'date' ] . "' ) ), value" . $graph_index . ": " . $sensor_reading[ 'data' ] . "},";
-				}
+				$graph_index = $sensor[ 'uuid' ];
 
-				$graph_index++;
+				foreach ( $sensor[ 'readings' ] as $uuid => $sensor_reading ) {
+					echo "{ 'date" . $graph_index . "': new Date( Date.parse( '" . $sensor_reading[ 'date' ] . "' ) ), 'value" . $graph_index . "': " . $sensor_reading[ 'data' ] . "},";
+				}
 			}
 
 			?>
@@ -132,11 +130,10 @@
 
 			<?
 
-			$graph_index = 0;
-
 			foreach ( $graph_sensors as $sensor_uuid => $sensor ) {
-				echo 'createSeries(' . $graph_index . ', "' . SensorManager::get_sensor( $graph['sensors'][$graph_index] )['name'] . '", "' . $sensor[array_keys($sensor)[0]]['unit'] . '");';
-				$graph_index++;
+				$graph_index = $sensor[ 'uuid' ];
+
+				echo 'createSeries("' . $graph_index . '", "' . SensorManager::get_sensor( $graph_index )[ 'name' ] . '", "' . $sensor[ 'readings' ][ array_keys( $sensor[ 'readings' ] )[ 0 ] ][ 'unit' ] . '");';
 			}
 
 			?>
@@ -191,10 +188,18 @@
 			/*
 				WebSockets
 			*/
-			parent.$( parent.document ).on( "sensor_reading", ( event, date, data, reading_uuid ) => {
-				window.chart.addData( [ { date: new Date( Date.parse( date ) ), value: data, uuid: reading_uuid } ] );
+			$( document ).on( "sensor_reading", ( event, date, data, reading_uuid, sensor_uuid ) => {
+				const wsData = {};
+
+				wsData[`date${sensor_uuid}`] = new Date( Date.parse( date ) );
+				wsData[`value${sensor_uuid}`] = data;
+				wsData['uuid'] = reading_uuid;
+
+				window.chart.addData( [ wsData ] );
 			} );
 		</script>
+
+		<? include 'services/websocketHandler.php'; ?>
 	</head>
 	<body class="iframe-graph-body">
 		<div id="chartdiv"></div>

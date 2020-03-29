@@ -3,15 +3,14 @@
 		WebSockets
 	*/
 	var server_address = '<? echo Config::get( 'wsserver_host' ); ?>';
-	var connection;
 
 	function connect() {
 		// Store and open the server websocket connection
-		connection = new WebSocket( server_address );
+		parent.connection = parent.connection ? parent.connection : new WebSocket( server_address );
 
 		// When the connection is opened
-		connection.onopen = () => {
-			connection.send( JSON.stringify( {
+		parent.connection.onopen = () => {
+			parent.connection.send( JSON.stringify( {
 				type: 'user_definition',
 				data: {
 					core_auth_key: '<? echo Config::get( 'wsserver_auth_key' ); ?>',
@@ -23,20 +22,25 @@
 		};
 
 		// Attempt reconnection every second
-		connection.onclose = () => {
+		parent.connection.onclose = () => {
 			setTimeout( () => {
+				parent.connection = null;
 				connect();
 			}, 1000);
 		};
 
 		// When data is received
-		connection.onmessage = ( message ) => {
-		    var json = JSON.parse( message.data );
+		const originalMethod = parent.connection.onmessage;
+
+		parent.connection.onmessage = ( message ) => {
+			if ( originalMethod ) originalMethod( message );
+			var json = JSON.parse( message.data );
 
 			if ( json.type === 'sensor_reading' ) {
-				$( document ).trigger( "sensor_reading", [ json.date, json.data, json.reading_uuid ] );
+				$( document ).trigger( "sensor_reading", [ json.date, json.data, json.reading_uuid, json.sensor_uuid ] );
 			}
 		}
+		
 	}
 
 	connect();

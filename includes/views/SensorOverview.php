@@ -108,9 +108,11 @@ $graph_url = "https://" . $_SERVER['SERVER_NAME'] . "/graph/" . substr( $_GET[ '
 				/*
 					WebSockets
 				*/
-				$( document ).on( "sensor_reading", ( event, date, data ) => {
-					$( "#sensor_readings" ).prepend( "<p>" + date + " = " + data + " <? echo $sensor[ 'unit' ]; ?></p>" );
-					$( "#reading_total" ).text( $( "#sensor_readings > p" ).length + " Total" );
+				$( document ).on( "sensor_reading", ( event, date, data, reading_uuid, sensor_uuid ) => {
+					if ( sensor_uuid == "<? echo $sensor_uuid ?>" ) {
+						$( "#sensor_readings" ).prepend( "<p>" + date + " = " + data + " <? echo $sensor[ 'unit' ]; ?></p>" );
+						$( "#reading_total" ).text( $( "#sensor_readings > p" ).length + " Total" );
+					}
 				} );
 			</script>
 			<h1><? echo $sensor[ 'name' ]; ?> Readings <span id="reading_total" class="sml-grey"><? echo count( $sensor_readings ); ?> Total</span></h1>

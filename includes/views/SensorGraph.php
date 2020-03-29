@@ -256,10 +256,14 @@
 			/*
 				WebSockets
 			*/
-			parent.$( parent.document ).on( "sensor_reading", ( event, date, data, reading_uuid ) => {
-				window.chart.addData( [ { date: new Date( Date.parse( date ) ), value: data, uuid: reading_uuid, anomaly: 0 } ] );
+			$( document ).on( "sensor_reading", ( event, date, data, reading_uuid, sensor_uuid ) => {
+				if ( sensor_uuid == "<? echo $sensor_uuid ?>" ) {
+					window.chart.addData( [ { date: new Date( Date.parse( date ) ), value: data, uuid: reading_uuid, anomaly: 0 } ] );
+				}
 			} );
 		</script>
+
+		<? include 'services/websocketHandler.php'; ?>
 	</head>
 	<body class="iframe-graph-body">
 		<div id="chartdiv"></div>
