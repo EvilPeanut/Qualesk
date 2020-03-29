@@ -19,6 +19,11 @@ Route::set( '/^$/' , function() {
 	}
 });
 
+Route::set( '/(gauge\/.*)/' , function() {
+	Generic::CreateView( 'Gauge' );
+	exit;
+});
+
 Route::set( '/(compound\/.*)/' , function() {
 	Generic::CreateView( 'CompoundGraph' );
 	exit;

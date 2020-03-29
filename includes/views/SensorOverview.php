@@ -94,13 +94,22 @@ $graph_url = "https://" . $_SERVER['SERVER_NAME'] . "/graph/" . substr( $_GET[ '
 		</div>
 		<!-- Settings prompt -->
 
-		<div class="grid-item grid-item-3x1"><div>
+		<div class="grid-item grid-item-2x1"><div>
 			<h1 class="graph-title"><? echo $sensor['name']; ?> Graph</h1>
 			
 			<img class="icon" src="../static/img/icon_settings.png" onclick="$( '#div_overlay_settings' ).show()" />
 			<img class="icon" src="../static/img/icon_share.png" onclick="$( '#div_overlay_share' ).show()" />
 
 			<iframe src="../graph/<? echo substr( $_GET[ 'url' ], strrpos( $_GET[ 'url' ], '/' ) + 1 ); ?>" style="width: 100%; height: 520px; border: 0; margin-top: 8px"></iframe>
+		</div></div>
+
+		<div class="grid-item grid-item-1x1"><div>
+			<h1 class="graph-title"><? echo $sensor['name']; ?> Gauge</h1>
+			
+			<img class="icon" src="../static/img/icon_settings.png" onclick="$( '#div_overlay_settings' ).show()" />
+			<img class="icon" src="../static/img/icon_share.png" onclick="$( '#div_overlay_share' ).show()" />
+
+			<iframe src="../gauge/<? echo substr( $_GET[ 'url' ], strrpos( $_GET[ 'url' ], '/' ) + 1 ); ?>" style="width: 100%; height: 520px; border: 0; margin-top: 8px"></iframe>
 		</div></div>
 
 		<div class="grid-item"><div>
