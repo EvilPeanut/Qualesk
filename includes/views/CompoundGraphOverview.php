@@ -115,13 +115,28 @@ function is_sensor_on_graph( $graph, $uuid ) {
 				<div style="width: 19%; height: calc(100vh - 178px); border: 0; margin-top: 12px; margin-left: 81%; overflow-y: auto">
 					<?
 
+					// Internal sensors
+					$sensor_array = SensorArrayManager::get_sensor_array( $graph[ 'sensor_array_uuid' ] );
+					echo "<p style='margin-bottom: 4px'>" . $sensor_array[ 'name' ] . "</p>";
+
+					$sensor_list = SensorManager::get_sensor_list( $graph[ 'sensor_array_uuid' ] );
+
+					foreach ( $sensor_list as $sensor_uuid => $sensor ) {
+						echo "<p style='margin-left: 16px; margin-bottom: 4px'><span style='color: #7bbdff'>&#8627;</span> <input type='checkbox' sensor_uuid='" . $sensor_uuid . "' " . ( is_sensor_on_graph( $graph, $sensor_uuid ) ? "checked" : "" ) . ">" . $sensor[ 'name' ] . "</p>";
+					}
+
+					// External sensors
 					$sensor_list = SensorManager::get_sensor_list();
 
 					$previous_sensor_array_name = null;
 
 					foreach ( $sensor_list as $sensor_uuid => $sensor ) {
-						if ($previous_sensor_array_name != $sensor[ 'sensor_array' ][ 'name' ]) {
-							echo "<p style='margin-bottom: 4px;" . ( is_null( $previous_sensor_array_name ) ? "" : "margin-top: 16px" ) . "'>" . $sensor[ 'sensor_array' ][ 'name' ] . "</p>";
+						if ( $sensor[ 'sensor_array' ][ 'uuid' ] == $graph[ 'sensor_array_uuid' ] ) {
+							continue;
+						}
+
+						if ( $previous_sensor_array_name != $sensor[ 'sensor_array' ][ 'name' ] ) {
+							echo "<p style='margin-bottom: 4px; margin-top: 16px'>" . $sensor[ 'sensor_array' ][ 'name' ] . "</p>";
 
 							$previous_sensor_array_name = $sensor[ 'sensor_array' ][ 'name' ];
 						}

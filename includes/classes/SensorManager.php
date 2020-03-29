@@ -231,15 +231,21 @@ class SensorManager
 		}
 	}
 
-	public static function get_sensor_list() {
+	public static function get_sensor_list( $sensor_array_uuid = NULL ) {
 		require( 'services/DatabaseConnect.php' );
+
+		$where_clause = "";
+
+		if ( $sensor_array_uuid != NULL ) {
+			$where_clause = " WHERE sensor_array_uuid='$sensor_array_uuid'";
+		}
 
 		$previous_sensor_array_uuid = NULL;
 		$sensor_array = NULL;
 
 		$sensor_list = array();
 
-		if ( $statement = $mysqli->prepare( "SELECT uuid, name, description, sensor_array_uuid FROM sensors ORDER BY sensor_array_uuid;" ) ) {
+		if ( $statement = $mysqli->prepare( "SELECT uuid, name, description, sensor_array_uuid FROM sensors $where_clause ORDER BY sensor_array_uuid;" ) ) {
 			$statement->execute();
 			$statement->store_result();
 			$statement->bind_result( $uuid, $name, $description, $sensor_array_uuid );
