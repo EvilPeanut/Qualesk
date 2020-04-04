@@ -94,7 +94,10 @@ div #div_prompt {
 	cursor: pointer;
 }
 #map {
-	height: 512px;
+	height: 100%;
+	min-height: 512px;
+	padding: 0px;
+	border-radius: 8px;
 }
 #div_prompt input[type='checkbox'], #div_prompt div {
 	margin-top: 6px;

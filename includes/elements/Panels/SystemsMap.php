@@ -1,7 +1,5 @@
-<div class="grid-item grid-item-2x1"><div>
-	<h1>Map</h1>
-
-	<div id="map" style="height: 512px"></div>
+<div class="grid-item grid-item-2x1">
+	<div id="map"></div>
 
 	<?
 
@@ -55,4 +53,4 @@
 
 	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCr9YlPj0UvSkEpK6GIaA4JqFZmWwujrg4&callback=initMap"
 	async defer></script>
-</div></div>
+</div>

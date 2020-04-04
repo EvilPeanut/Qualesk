@@ -17,9 +17,7 @@
 
 		?>
 
-		<div class="grid-item"><div>
-			<h1>Map</h1>
-
+		<div class="grid-item">
 			<div id="map"></div>
 
 			<script>
@@ -70,7 +68,7 @@
 
 			<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCr9YlPj0UvSkEpK6GIaA4JqFZmWwujrg4&callback=initMap"
 			async defer></script>
-		</div></div>
+		</div>
 
 		<div class="grid-item"><div>
 			<h1>Sensor Arrays  <span class="sml-grey"><? echo SensorArrayManager::get_count( $system_uuid ); ?> Total</span></h1>
