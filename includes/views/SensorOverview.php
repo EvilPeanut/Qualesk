@@ -1,6 +1,13 @@
 <?
 
+require_once( 'classes/configurable.php' );
+
 $sensor_uuid = substr( $_GET[ 'url' ], strrpos( $_GET[ 'url' ], '/' ) + 1 );
+
+$config = new Configurable( "sensors", $sensor_uuid );
+$default_colour = $config->get( 'default_colour', '#67B7DC' );
+$permission_public_graph = (boolean)$config->get( 'permission_public_graph', false );
+$adaptive_scale = (boolean)$config->get( 'adaptive_scale', false );
 
 $sensor_readings = SensorManager::get_sensor_readings( $sensor_uuid );
 $sensor = SensorManager::get_sensor( $sensor_uuid );
@@ -34,7 +41,7 @@ $graph_url = "https://" . $_SERVER['SERVER_NAME'] . "/graph/" . substr( $_GET[ '
 				<h1>Share <? echo $sensor['name']; ?> Graph</h1>
 				<?
 
-				if ( !$sensor[ 'permission_public_graph' ] ) {
+				if ( !$permission_public_graph ) {
 					echo "<p style='color: #ff4000'>Users must be logged in to view this graph</p><br>";
 				}
 
@@ -53,19 +60,21 @@ $graph_url = "https://" . $_SERVER['SERVER_NAME'] . "/graph/" . substr( $_GET[ '
 		<!-- Settings prompt -->
 		<div id="div_overlay_settings" class="overlay">
 			<div id="div_prompt">
-				<h1><? echo $sensor['name']; ?> Graph Settings</h1>
-				<p>Publicly Visible</p>
-				<input id="chk_permission_public_graph" type="checkbox" <? echo $sensor[ 'permission_public_graph' ] ? 'checked' : ''; ?>><p style="display: inline">Allow</p></input>
+				<h1>Settings</h1>
+
+				<input id="chk_permission_public_graph" type="checkbox" <? echo $permission_public_graph ? 'checked' : ''; ?>><p style="display: inline">Allow Public Viewing</p></input><br>
+				<input id="chk_adaptive_scale" type="checkbox" <? echo $adaptive_scale ? 'checked' : ''; ?>><p style="display: inline">Adaptive Scale</p></input>
+
 				<br><br>
 				<p>Colour</p>
 				<div id="colorpicker"></div>
-				<input id="input_default_colour" type="hidden" value="<? echo $sensor[ 'default_colour']; ?>">			
+				<input id="input_default_colour" type="hidden" value="<? echo $default_colour; ?>">			
 				<br>
 				<script>
 					$( function () {
 						$( "#colorpicker" ).farbtastic();
 
-						$.farbtastic( "#colorpicker" ).setColor( "<? echo $sensor[ 'default_colour']; ?>" );
+						$.farbtastic( "#colorpicker" ).setColor( "<? echo $default_colour; ?>" );
 
 						$.farbtastic( "#colorpicker" ).linkTo( ( colour ) => {
 							$( "#input_default_colour" ).val( colour );
@@ -79,7 +88,8 @@ $graph_url = "https://" . $_SERVER['SERVER_NAME'] . "/graph/" . substr( $_GET[ '
 							data: { 
 								sensor_uuid: "<? echo $sensor_uuid ?>",
 								default_colour: $( "#input_default_colour" ).val(),
-								permission_public_graph: $( "#chk_permission_public_graph" ).prop( "checked" ) ? 1 : 0
+								permission_public_graph: $( "#chk_permission_public_graph" ).prop( "checked" ) ? 1 : 0,
+								adaptive_scale: $( "#chk_adaptive_scale" ).prop( "checked" ) ? 1 : 0
 							}
 						}).done( () => {
 							location.reload();

@@ -105,8 +105,7 @@ if ( $mysqli->query("SHOW TABLES LIKE 'sensors';")->num_rows > 0 ) {
 		`upper_warning_boundary` tinytext,
 		`lower_warning_boundary` tinytext,
 		`lower_urgent_boundary` tinytext,
-		`default_colour` tinytext,
-		`permission_public_graph` boolean NOT NULL DEFAULT 0,
+		`configuration` JSON,
 		PRIMARY KEY (`uuid`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 	")->execute();
@@ -123,6 +122,24 @@ if ( $mysqli->query("SHOW TABLES LIKE 'sensor_types';")->num_rows > 0 ) {
 		`name` tinytext NOT NULL,
 		`description` tinytext,
 		`unit` tinytext NOT NULL,
+		PRIMARY KEY (`uuid`)
+		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+	")->execute();
+	echo 'Done!<br>';
+}
+
+if ( $mysqli->query("SHOW TABLES LIKE 'graphs';")->num_rows > 0 ) {
+	echo 'Graphs table exists<br>';
+} else {
+	echo 'Graphs table does not exist. Creating it...<br>';
+	$mysqli->prepare("
+		CREATE TABLE `graphs` (
+		`uuid` char(36) NOT NULL,
+		`sensor_array_uuid` char(36) NOT NULL,
+		`name` tinytext NOT NULL,
+		`description` tinytext,
+		`sensors` text,
+		`configuration` JSON,
 		PRIMARY KEY (`uuid`)
 		) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 	")->execute();

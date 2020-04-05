@@ -1,17 +1,11 @@
 <?
 
-require( 'services/DatabaseConnect.php' );
+require( 'classes/configurable.php' );
 
-$sensor_uuid = $_REQUEST[ "sensor_uuid" ];
-$default_colour = $_REQUEST[ "default_colour" ];
-$permission_public_graph = $_REQUEST[ "permission_public_graph" ];
-
-$mysqli->prepare("
-	UPDATE `sensors`
-	SET
-	`default_colour` = '$default_colour',
-	`permission_public_graph` = '$permission_public_graph'
-	WHERE `uuid` = '$sensor_uuid';
-")->execute();
+$config = new Configurable( "sensors", $_REQUEST[ "sensor_uuid" ] );
+$config->set( "default_colour", $_REQUEST[ "default_colour" ] );
+$config->set( "permission_public_graph", $_REQUEST[ "permission_public_graph" ] );
+$config->set( "adaptive_scale", $_REQUEST[ "adaptive_scale" ] );
+$config->save();
 
 ?>

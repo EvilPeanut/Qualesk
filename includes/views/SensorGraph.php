@@ -2,8 +2,11 @@
 
 	require_once( "classes/sensorManager.php" );
 	require_once( "classes/accountManager.php" );
+	require_once( 'classes/configurable.php' );
 
 	$sensor_uuid = substr( $_GET[ 'url' ], strrpos( $_GET[ 'url' ], '/' ) + 1 );
+
+	$config = new Configurable( "sensors", $sensor_uuid );
 
 	$sensor_readings = SensorManager::get_sensor_readings( $sensor_uuid );
 	$sensor = SensorManager::get_sensor( $sensor_uuid ); 
@@ -13,8 +16,9 @@
 	$lower_warning_boundary = $sensor[ 'lower_warning_boundary' ];
 	$lower_urgent_boundary = $sensor[ 'lower_urgent_boundary' ];
 
-	$default_colour = $sensor[ 'default_colour' ];
-	$permission_public_graph = $sensor[ 'permission_public_graph' ];
+	$default_colour = $config->get( 'default_colour', '#67B7DC' );
+	$permission_public_graph = (boolean)$config->get( 'permission_public_graph', false );
+	$adaptive_scale = (boolean)$config->get( 'adaptive_scale', false );
 
 	$is_logged_in = AccountManager::is_logged_in();
 
@@ -42,6 +46,7 @@
 			var upper_warning_boundary = <? echo $upper_warning_boundary != NULL ? $upper_warning_boundary : 'null' ?>;
 			var lower_warning_boundary = <? echo $lower_warning_boundary != NULL ? $lower_warning_boundary : 'null' ?>;
 			var lower_urgent_boundary = <? echo $lower_urgent_boundary != NULL ? $lower_urgent_boundary : 'null' ?>;
+			var adaptive_scale = <? echo $adaptive_scale ? 'true' : 'false' ?>;
 
 			/*
 				Charts
@@ -74,6 +79,14 @@
 			dateAxis.tooltipDateFormat = "yyyy-MM-dd\nhh:mm:ss";
 
 			var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
+
+			// Adaptive scale
+			if ( !adaptive_scale ) {
+				chart.events.on( "ready", () => {
+					valueAxis.min = valueAxis.minZoomed;
+					valueAxis.max = valueAxis.maxZoomed;
+				} );
+			}
 
 			// Create series
 			var series = chart.series.push(new am4charts.LineSeries());

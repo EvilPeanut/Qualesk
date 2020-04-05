@@ -1,15 +1,10 @@
 <?
 
-require( 'services/DatabaseConnect.php' );
+require( 'classes/configurable.php' );
 
-$compound_graph_uuid = $_REQUEST[ "compound_graph_uuid" ];
-$permission_public_graph = $_REQUEST[ "permission_public_graph" ];
-
-$mysqli->prepare("
-	UPDATE `graphs`
-	SET
-	`permission_public_graph` = '$permission_public_graph'
-	WHERE `uuid` = '$compound_graph_uuid';
-")->execute();
+$config = new Configurable( "graphs", $_REQUEST[ "compound_graph_uuid" ] );
+$config->set( "permission_public_graph", $_REQUEST[ "permission_public_graph" ] );
+$config->set( "adaptive_scale", $_REQUEST[ "adaptive_scale" ] );
+$config->save();
 
 ?>

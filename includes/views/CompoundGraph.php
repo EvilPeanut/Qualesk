@@ -2,13 +2,16 @@
 
 	require_once( "classes/graphManager.php" );
 	require_once( "classes/accountManager.php" );
+	require_once( 'classes/configurable.php' );
 
 	$compound_graph_uuid = substr( $_GET[ 'url' ], strrpos( $_GET[ 'url' ], '/' ) + 1 );
 
 	$graph = GraphManager::get_graph( $compound_graph_uuid );
 	$graph_sensors = GraphManager::get_graph_readings( $graph );
 
-	$permission_public_graph = $graph[ 'permission_public_graph' ];
+	$config = new Configurable( "graphs", $compound_graph_uuid );
+	$permission_public_graph = (boolean)$config->get( 'permission_public_graph', false );
+	$adaptive_scale = (boolean)$config->get( 'adaptive_scale', false );
 
 	$is_logged_in = AccountManager::is_logged_in();
 
@@ -29,6 +32,11 @@
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 		<script>
+			/*
+				Data from PHP
+			*/
+			var adaptive_scale = <? echo $adaptive_scale ? 'true' : 'false' ?>;
+
 			/*
 				Charts
 			*/
@@ -63,8 +71,6 @@
 
 			dateAxis.tooltipDateFormat = "yyyy-MM-dd\nhh:mm:ss";
 
-			var valueAxis = chart.yAxes.push(new am4charts.ValueAxis());
-
 			// Create a horizontal scrollbar with preview and place it underneath the date axis
 			chart.scrollbarX = new am4charts.XYChartScrollbar();
 			chart.scrollbarX.parent = chart.bottomAxesContainer;
@@ -77,6 +83,15 @@
 					valueAxis.syncWithAxis = chart.yAxes.getIndex(0);
 				}
 
+				// Adaptive scale
+				if ( !adaptive_scale ) {
+					chart.events.on( "ready", () => {
+						valueAxis.min = valueAxis.minZoomed;
+						valueAxis.max = valueAxis.maxZoomed;
+					} );
+				}
+
+				// Series
 				var series = chart.series.push(new am4charts.LineSeries());
 				window.series = series;
 

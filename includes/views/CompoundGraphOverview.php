@@ -1,6 +1,12 @@
 <?
 
+require_once( 'classes/configurable.php' );
+
 $compound_graph_uuid = substr( $_GET[ 'url' ], strrpos( $_GET[ 'url' ], '/' ) + 1 );
+
+$config = new Configurable( "graphs", $compound_graph_uuid );
+$permission_public_graph = (boolean)$config->get( 'permission_public_graph', false );
+$adaptive_scale = (boolean)$config->get( 'adaptive_scale', false );
 
 $graph = GraphManager::get_graph( $compound_graph_uuid );
 
@@ -54,7 +60,7 @@ function is_sensor_on_graph( $graph, $uuid ) {
 				<h1>Share <? echo $graph['name']; ?> Graph</h1>
 				<?
 
-				if ( !$graph[ 'permission_public_graph' ] ) {
+				if ( !$permission_public_graph ) {
 					echo "<p style='color: #ff4000'>Users must be logged in to view this graph</p><br>";
 				}
 
@@ -74,9 +80,11 @@ function is_sensor_on_graph( $graph, $uuid ) {
 		<!-- Settings prompt -->
 		<div id="div_overlay_settings" class="overlay">
 			<div id="div_prompt">
-				<h1><? echo $graph['name']; ?> Graph Settings</h1>
-				<p>Publicly Visible</p>
-				<input id="chk_permission_public_graph" type="checkbox" <? echo $graph[ 'permission_public_graph' ] ? 'checked' : ''; ?>><p style="display: inline">Allow</p></input>		
+				<h1>Settings</h1>
+
+				<input id="chk_permission_public_graph" type="checkbox" <? echo $permission_public_graph ? 'checked' : ''; ?>><p style="display: inline">Allow Public Viewing</p></input><br>
+				<input id="chk_adaptive_scale" type="checkbox" <? echo $adaptive_scale ? 'checked' : ''; ?>><p style="display: inline">Adaptive Scale</p></input>
+
 				<br><br>
 				<script>
 					function setGraphSettings() {
@@ -85,7 +93,8 @@ function is_sensor_on_graph( $graph, $uuid ) {
 							url: "../includes/services/compoundGraphSettingsSet.php",
 							data: { 
 								compound_graph_uuid: "<? echo $compound_graph_uuid ?>",
-								permission_public_graph: $( "#chk_permission_public_graph" ).prop( "checked" ) ? 1 : 0
+								permission_public_graph: $( "#chk_permission_public_graph" ).prop( "checked" ) ? 1 : 0,
+								adaptive_scale: $( "#chk_adaptive_scale" ).prop( "checked" ) ? 1 : 0
 							}
 						}).done( () => {
 							location.reload();
