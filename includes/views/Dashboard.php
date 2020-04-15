@@ -11,6 +11,17 @@
 	<title><? echo Config::get( 'site_name' ); ?> | <? echo $dashboard[ 'name' ]; ?></title>
 	<link rel="stylesheet" type="text/css" href="../static/css/main.css">
 	<link rel="icon" type="image/x-icon" href="../static/img/favicon.png" />
+	<style>
+		/* Hack to allow 2 columns */
+		.grid-item-3x1 {
+			grid-column-end: 3;
+		}
+
+		/* Set container to 2 columns */
+		.grid-container {
+			grid-template-columns: repeat(2, 1fr);
+		}
+	</style>
 	<script src="../static/js/jquery-3.4.0.min.js"></script>
 	<script>
 		var elementCount = <? echo is_array( $dashboard[ 'data' ] ) ? count( $dashboard[ 'data' ] ) : 0; ?>;
