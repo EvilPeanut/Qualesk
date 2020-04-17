@@ -52,16 +52,24 @@
 			elementCount++;
 		}
 
+		$( document ).on( "click", "#div_add", () => showAddElements() );
+
 		function showAddElements() {
 			$( "#div_add" ).css( "background", "white" );
+			$( "#div_add" ).css( "cursor", "default" );
 			$( "#div_add_items" ).show();
 			$( "#icon_add" ).hide();
+
+			$( document ).off( "click", "#div_add" );
 		}
 
 		function hideAddElements() {
-			$( "#div_add" ).css( "background", "none" );
+			$( "#div_add" ).css( "background", "rgba(0, 0, 0, 0.1)" );
+			$( "#div_add" ).css( "cursor", "pointer" );
 			$( "#div_add_items" ).hide();
 			$( "#icon_add" ).show();
+
+			setTimeout( () => $( document ).on( "click", "#div_add", () => showAddElements() ), 1 );
 		}
 	</script>
 </head>
@@ -90,8 +98,8 @@
 
 		?>
 
-		<div id="div_add" class="grid-item grid-item-1x1" style="background: none; border: 2px dashed rgba(255, 255, 255, 0.5); position: relative; min-height: 160px"><div>
-			<img id="icon_add" src="../static/img/tile_add_graph.png" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); cursor: pointer" onclick="showAddElements()"/>
+		<div id="div_add" class="grid-item grid-item-1x1" style="background: rgba(0, 0, 0, 0.1); position: relative; min-height: 160px; cursor: pointer"><div>
+			<img id="icon_add" src="../static/img/tile_add_graph.png" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%)"/>
 			<div id="div_add_items" style="display: none">
 				<h1 style='display: inline'>Sensor Graphs</h1>
 				<img class='icon' src='../static/img/icon_close.png' onclick="hideAddElements()"/>
