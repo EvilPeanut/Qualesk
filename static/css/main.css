@@ -102,6 +102,10 @@ div #div_prompt {
 #div_prompt input[type='checkbox'], #div_prompt div {
 	margin-top: 6px;
 }
+#div_admin_links img {
+	display: inline-block;
+	margin: 16px calc(8.25% - 16px);
+}
 img[src*="../static/img/remove.png"] {
 	filter: opacity(0.5);
 }
