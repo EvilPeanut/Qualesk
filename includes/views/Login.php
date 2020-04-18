@@ -8,15 +8,15 @@
 	<script src="../static/js/jquery-3.4.0.min.js"></script>
 	<script>
 		function login() {
-			$.ajax({
+			$.ajax( {
 				method: "POST",
 				url: "includes/services/userLogin.php",
 				data: { 
 					username: $( "input[name='username']" ).val(),
 					password: $( "input[name='password']" ).val()
 				}
-			})
-			.done(function( msg ) {
+			} )
+			.done( ( msg ) => {
 				if ( msg == true ) {
 					location.reload();
 				} else {
@@ -24,6 +24,14 @@
 				}
 			});
 		}
+
+		$( () => {
+			$( "#div_login" ).keypress( ( event ) => {
+				if ( event.keyCode === 13 ) {
+					login();
+				}
+			} );
+		} );
 	</script>
 	<script>
 		var TxtType = function(el, toRotate, period) {
@@ -147,7 +155,7 @@
 	<div class="grid-container">
 		<? include 'elements/topBar.php'; ?>
 
-		<div class="grid-item grid-item-3x1 no-border inline"><div>
+		<div id="div_login" class="grid-item grid-item-3x1 no-border inline"><div>
 			<p>Username</p><input type="text" name="username">
 			<p>Password</p><input type="password" name="password">
 			<input onclick="login()" type="button" value="Login">
