@@ -62,6 +62,9 @@
 						}
 
 						map.fitBounds( bounds, 50 );
+
+						// Move the map south by 29 pixels to account for pin height
+						map.panBy( 0, -29 );
 					}
 				}
 			</script>
