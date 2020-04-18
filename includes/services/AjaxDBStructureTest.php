@@ -179,4 +179,6 @@ if ( $mysqli->query("SHOW TABLES LIKE 'dashboards';")->num_rows > 0 ) {
 	echo 'Done!<br>';
 }
 
+echo '<br>Complete';
+
 ?>
