@@ -12,6 +12,7 @@ if ( count( $dashboard[ 'data' ] ) == 1 ) {
 	$dashboard[ 'data' ] = array();
 } else {
 	$uuid_index = -1;
+
 	foreach ( $dashboard[ 'data' ] as $index => $element ) {
 		if ( $element->uuid == $element_uuid ) {
 			$uuid_index = $index;
@@ -19,7 +20,7 @@ if ( count( $dashboard[ 'data' ] ) == 1 ) {
 		}
 	}
 
-	unset( $dashboard[ 'data' ][ $uuid_index ] );
+	array_splice( $dashboard[ 'data' ], $uuid_index, 1 );
 }
 
 $dash_json = json_encode( $dashboard[ 'data' ] );
