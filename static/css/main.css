@@ -86,7 +86,7 @@ div #div_prompt {
 .iframe-graph-body #chartdiv {
 	height: 100%;
 }
-.inline-button {
+.inline-button, button, input[type='submit'] {
 	display: inline-block;
 	background-color: #efefef;
 	border-bottom: 1px solid lightgrey;
