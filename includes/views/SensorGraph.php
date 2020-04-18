@@ -20,6 +20,9 @@
 	$permission_public_graph = (boolean)$config->get( 'permission_public_graph', false );
 	$adaptive_scale = (boolean)$config->get( 'adaptive_scale', false );
 
+	$series_min = null;
+	$series_max = null;
+
 	$is_logged_in = AccountManager::is_logged_in();
 
 	if ( !$permission_public_graph && !$is_logged_in ) {
@@ -63,7 +66,25 @@
 			<?
 
 			foreach ( $sensor_readings as $uuid => $sensor_reading ) {
-				echo "{ date: new Date( Date.parse( '" . $sensor_reading[ 'date' ] . "' ) ), value: " . $sensor_reading[ 'data' ] . ", uuid: '" . $uuid . "', anomaly: " . $sensor_reading[ 'anomaly' ] . "},";
+				$data = $sensor_reading[ 'data' ];
+
+				if ( $series_min != null ) {
+					if ( $series_min > $data ) {
+						$series_min = $data;
+					}
+				} else {
+					$series_min = $data;
+				}
+
+				if ( $series_max != null ) {
+					if ( $series_max < $data ) {
+						$series_max = $data;
+					}
+				} else {
+					$series_max = $data;
+				}
+
+				echo "{ date: new Date( Date.parse( '" . $sensor_reading[ 'date' ] . "' ) ), value: " . $data . ", uuid: '" . $uuid . "', anomaly: " . $sensor_reading[ 'anomaly' ] . "},";
 			}
 
 			?>
@@ -83,8 +104,8 @@
 			// Adaptive scale
 			if ( !adaptive_scale ) {
 				chart.events.on( "ready", () => {
-					valueAxis.min = valueAxis.minZoomed;
-					valueAxis.max = valueAxis.maxZoomed;
+					valueAxis.min = <? echo $series_min ?>;
+					valueAxis.max = <? echo $series_max ?>;
 				} );
 			}
 

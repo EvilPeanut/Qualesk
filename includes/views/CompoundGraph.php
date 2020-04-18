@@ -13,6 +13,9 @@
 	$permission_public_graph = (boolean)$config->get( 'permission_public_graph', false );
 	$adaptive_scale = (boolean)$config->get( 'adaptive_scale', false );
 
+	$series_mins = array();
+	$series_maxs = array();
+
 	$is_logged_in = AccountManager::is_logged_in();
 
 	if ( !$permission_public_graph && !$is_logged_in ) {
@@ -55,12 +58,34 @@
 				$graph_index = $sensor[ 'uuid' ];
 
 				foreach ( $sensor[ 'readings' ] as $uuid => $sensor_reading ) {
-					echo "{ 'date" . $graph_index . "': new Date( Date.parse( '" . $sensor_reading[ 'date' ] . "' ) ), 'value" . $graph_index . "': " . $sensor_reading[ 'data' ] . "},";
+					$data = $sensor_reading[ 'data' ];
+
+					if ( array_key_exists( $graph_index, $series_mins ) ) {
+						if ( $series_mins[ $graph_index ] > $data ) {
+							$series_mins[ $graph_index ] = $data;
+						}
+					} else {
+						$series_mins[ $graph_index ] = $data;
+					}
+
+					if ( array_key_exists( $graph_index, $series_maxs ) ) {
+						if ( $series_maxs[ $graph_index ] < $data ) {
+							$series_maxs[ $graph_index ] = $data;
+						}
+					} else {
+						$series_maxs[ $graph_index ] = $data;
+					}
+
+					echo "{ 'date" . $graph_index . "': new Date( Date.parse( '" . $sensor_reading[ 'date' ] . "' ) ), 'value" . $graph_index . "': " . $data . "},";
 				}
 			}
 
 			?>
 			];
+
+			// Min/Max values per series
+			var series_mins = <? echo json_encode( $series_mins ) ?>;
+			var series_maxs = <? echo json_encode( $series_maxs ) ?>;
 
 			// Create axes
 			var dateAxis = chart.xAxes.push(new am4charts.DateAxis());
@@ -86,8 +111,8 @@
 				// Adaptive scale
 				if ( !adaptive_scale ) {
 					chart.events.on( "ready", () => {
-						valueAxis.min = valueAxis.minZoomed;
-						valueAxis.max = valueAxis.maxZoomed;
+						valueAxis.min = series_mins[ index ];
+						valueAxis.max = series_maxs[ index ];
 					} );
 				}
 
