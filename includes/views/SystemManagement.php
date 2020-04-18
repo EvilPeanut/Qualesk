@@ -13,7 +13,7 @@
 
 		<div class="grid-item"><div>
 			<h1>Systems <span class="sml-grey"><? echo SystemManager::get_count(); ?> Total</span></h1>
-			<? SystemManager::print_system_list( true ); ?>
+			<div class="overflow-list-512"><? SystemManager::print_system_list( true ); ?></div>
 		</div></div>
 
 		<div class="grid-item"><div>

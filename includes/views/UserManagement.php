@@ -13,7 +13,7 @@
 
 		<div class="grid-item"><div>
 			<h1>Users <span class="sml-grey"><? echo Admin::get_count(); ?> Total</span></h1>
-			<? Admin::PrintUserList(); ?>
+			<div class="overflow-list-512"><? Admin::PrintUserList(); ?></div>
 		</div></div>
 
 		<div class="grid-item"><div>
@@ -27,7 +27,7 @@
 
 		<div class="grid-item"><div>
 			<h1>Recent Logins <span class="sml-grey"><? echo Admin::get_login_count(); ?> Total</span></h1>
-			<? Admin::PrintRecentLogins(); ?>
+			<div class="overflow-list-512"><? Admin::PrintRecentLogins(); ?></div>
 		</div></div>
 
 		<? include 'elements/bottomBar.php'; ?>

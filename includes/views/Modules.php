@@ -12,6 +12,7 @@
 
 		<div class="grid-item"><div>
 			<h1>Modules <span class="sml-grey"><? echo ModuleManager::get_count(); ?> Total</span></h1>
+			<div class="overflow-list-512">
 			<?
 
 			foreach ( ModuleManager::get_list() as $module ) {
@@ -19,6 +20,7 @@
 			}
 
 			?>
+			</div>
 		</div></div>
 
 		<? include 'elements/bottomBar.php'; ?>

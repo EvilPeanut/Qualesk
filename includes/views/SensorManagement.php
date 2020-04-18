@@ -13,7 +13,7 @@
 
 		<div class="grid-item"><div>
 			<h1>Sensors <span class="sml-grey"><? echo SensorManager::get_count(); ?> Total</span></h1>
-			<? SensorManager::print_sensor_list( true ); ?>
+			<div class="overflow-list-512"><? SensorManager::print_sensor_list( true ); ?></div>
 		</div></div>
 
 		<div class="grid-item"><div>

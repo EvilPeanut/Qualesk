@@ -42,15 +42,15 @@ $system_center = SystemManager::get_system_center();
 
 		<div class="grid-item"><div>
 			<h1>Sensor Arrays <span class="sml-grey"><? echo SensorArrayManager::get_count(); ?> Total</span></h1>
-			<? SensorArrayManager::print_sensor_array_list( true ); ?>
+			<div class="overflow-list-512"><? SensorArrayManager::print_sensor_array_list( true ); ?></div>
 		</div></div>
 
 		<div class="grid-item"><div>
 			<h1>Add New Sensor Array</h1>
 			<form action="../includes/services/sensorArrayCreate.php" method="post">
-				<div style="display: inline-block"><p>System</p><? SystemManager::create_system_dropdown(); ?><br><br></div>
-				<div style="display: inline-block; margin-left: 16px"><p>Name</p><input type="text" name="name"><br><br></div>
-				<div><p>Description</p><input type="text" name="description"><br><br></div>
+				<div style="display: inline-block; margin-right: 16px"><p>System</p><? SystemManager::create_system_dropdown(); ?><br><br></div>
+				<div style="display: inline-block; margin-right: 16px"><p>Name</p><input type="text" name="name"><br><br></div>
+				<div style="display: inline-block"><p>Description</p><input type="text" name="description"><br><br></div>
 				<div id="map"></div>
 				<input type="text" name="latitude" hidden>
 				<input type="text" name="longitude" hidden><br>
